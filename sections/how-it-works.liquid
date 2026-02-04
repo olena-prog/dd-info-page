@@ -25,6 +25,8 @@
                         {{ section.settings.feature_image | image_url: width: 300 }} 300w,
                         {{ section.settings.feature_image | image_url: width: 400 }} 400w"
                 sizes="(max-width: 768px) 200px, 300px"
+                width="{{ section.settings.feature_image.width }}"
+                height="{{ section.settings.feature_image.height }}"
                 alt="{{ section.settings.feature_image.alt | default: section.settings.feature_title }}"
                 loading="lazy"
               >

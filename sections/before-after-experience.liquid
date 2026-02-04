@@ -99,6 +99,8 @@
             {% elsif section.settings.video_poster != blank %}
               <img
                 src="{{ section.settings.video_poster | image_url: width: 600 }}"
+                width="{{ section.settings.video_poster.width }}"
+                height="{{ section.settings.video_poster.height }}"
                 alt="{{ section.settings.video_poster.alt | default: 'Results video' }}"
                 loading="lazy"
                 style="width: 100%; height: 100%; object-fit: cover;"

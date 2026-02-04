@@ -26,6 +26,8 @@
                             {{ block.settings.image | image_url: width: 350 }} 350w,
                             {{ block.settings.image | image_url: width: 400 }} 400w"
                     sizes="(max-width: 768px) 45vw, 25vw"
+                    width="{{ block.settings.image.width }}"
+                    height="{{ block.settings.image.height }}"
                     alt="{{ block.settings.image.alt | default: block.settings.title }}"
                     loading="lazy"
                   >

@@ -19,6 +19,8 @@
                       {{ section.settings.product_image | image_url: width: 450 }} 450w,
                       {{ section.settings.product_image | image_url: width: 600 }} 600w"
               sizes="(max-width: 1024px) 300px, 400px"
+              width="{{ section.settings.product_image.width }}"
+              height="{{ section.settings.product_image.height }}"
               alt="{{ section.settings.product_image.alt | default: 'Dynamo Delay Product' }}"
               loading="lazy"
             >

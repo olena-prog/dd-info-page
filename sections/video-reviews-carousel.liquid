@@ -49,6 +49,8 @@
                       srcset="{{ block.settings.image | image_url: width: 300 }} 300w,
                               {{ block.settings.image | image_url: width: 400 }} 400w"
                       sizes="(max-width: 768px) 85vw, 33vw"
+                      width="{{ block.settings.image.width }}"
+                      height="{{ block.settings.image.height }}"
                       alt="{{ block.settings.image.alt | default: 'Review' }}"
                       loading="lazy"
                     >
