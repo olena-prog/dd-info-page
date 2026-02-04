@@ -1,0 +1,297 @@
+{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="kits-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    <div class="kits-content">
+      {%- comment -%} Header {%- endcomment -%}
+      <div class="kits-header">
+        <h2 class="font-black">{{ section.settings.title }}</h2>
+        <p>{{ section.settings.subtitle }}</p>
+      </div>
+
+      {%- comment -%} Kits Grid {%- endcomment -%}
+      <div class="kits-grid">
+        {% for block in section.blocks %}
+          {% if block.type == 'kit' %}
+            <div class="kit-card" {{ block.shopify_attributes }}>
+              <div class="kit-image">
+                {% if block.settings.badge != blank %}
+                  <span class="kit-badge">{{ block.settings.badge }}</span>
+                {% endif %}
+
+                {% if block.settings.image != blank %}
+                  <img
+                    src="{{ block.settings.image | image_url: width: 400 }}"
+                    srcset="{{ block.settings.image | image_url: width: 250 }} 250w,
+                            {{ block.settings.image | image_url: width: 350 }} 350w,
+                            {{ block.settings.image | image_url: width: 400 }} 400w"
+                    sizes="(max-width: 768px) 45vw, 25vw"
+                    alt="{{ block.settings.image.alt | default: block.settings.title }}"
+                    loading="lazy"
+                  >
+                {% else %}
+                  <div class="image-upload-placeholder" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: #94a3b8;"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                    <p style="color: #94a3b8; font-size: 10px; margin-top: 6px;">Upload Image</p>
+                  </div>
+                {% endif %}
+              </div>
+              <div class="kit-content">
+                <h3>{{ block.settings.title }}</h3>
+                <div class="kit-price">
+                  <span class="kit-price-now">{{ block.settings.price_now }}</span>
+                  {% if block.settings.price_was != blank %}
+                    <span class="kit-price-was">{{ block.settings.price_was }}</span>
+                  {% endif %}
+                </div>
+                <p class="kit-description line-clamp-2">{{ block.settings.description }}</p>
+                <a href="{{ block.settings.button_url }}"
+                   {% if block.settings.button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                   class="btn btn-primary btn-full" style="padding: 0.5rem 1rem; font-size: 0.75rem;">
+                  {{ block.settings.button_text }}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {%- comment -%} Footer CTA {%- endcomment -%}
+      <div class="kits-footer">
+        <h3 class="font-bold">{{ section.settings.footer_title }}</h3>
+        <div class="kits-benefits">
+          {% for block in section.blocks %}
+            {% if block.type == 'benefit' %}
+              <div class="kits-benefit" {{ block.shopify_attributes }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+                <span>{{ block.settings.text }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <a href="{{ section.settings.footer_button_url }}"
+           {% if section.settings.footer_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+           class="btn btn-secondary btn-lg">
+          {{ section.settings.footer_button_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Intimacy Kits",
+  "tag": "section",
+  "class": "section-kits",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Complete Valentine's Intimacy Kits - 25% OFF"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Everything you need in one convenient package. From spontaneous hookups to all-night marathons."
+    },
+    {
+      "type": "header",
+      "content": "Footer CTA"
+    },
+    {
+      "type": "text",
+      "id": "footer_title",
+      "label": "Footer Title",
+      "default": "Why Buy Kits?"
+    },
+    {
+      "type": "text",
+      "id": "footer_button_text",
+      "label": "Footer Button Text",
+      "default": "Shop All Kits – Save 25%"
+    },
+    {
+      "type": "url",
+      "id": "footer_button_url",
+      "label": "Footer Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "footer_button_new_tab",
+      "label": "Open in New Tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "kit",
+      "name": "Kit Product",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Kit Image",
+          "info": "Recommended: 400x500px (3:4 aspect ratio)"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge Text",
+          "info": "e.g., 'BEST SELLER'. Leave blank for no badge"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Kit Title",
+          "default": "The Hook Up Kit"
+        },
+        {
+          "type": "text",
+          "id": "price_now",
+          "label": "Sale Price",
+          "default": "$14.99"
+        },
+        {
+          "type": "text",
+          "id": "price_was",
+          "label": "Original Price",
+          "default": "$19.99"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Vibrating ring, condoms, lube & wipes. Perfect for spontaneous fun."
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text",
+          "default": "Shop Now"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button URL"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_new_tab",
+          "label": "Open in New Tab",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "benefit",
+      "name": "Footer Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Benefit Text",
+          "default": "Save up to 57% vs buying separately"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Intimacy Kits",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "kit",
+          "settings": {
+            "title": "The Hook Up Kit",
+            "price_now": "$14.99",
+            "price_was": "$19.99",
+            "description": "Vibrating ring, condoms, lube & wipes. Perfect for spontaneous fun.",
+            "button_text": "Shop Now"
+          }
+        },
+        {
+          "type": "kit",
+          "settings": {
+            "title": "The Glow Up Kit",
+            "price_now": "$29.99",
+            "price_was": "$39.99",
+            "description": "Rechargeable massager, arousal cream & lube. Designed for her pleasure.",
+            "button_text": "Shop Now"
+          }
+        },
+        {
+          "type": "kit",
+          "settings": {
+            "title": "The All Night Kit",
+            "badge": "⭐ BEST SELLER",
+            "price_now": "$18.74",
+            "price_was": "$24.99",
+            "description": "Delay spray, penis ring, lube & wipes. Last 3x longer tonight.",
+            "button_text": "Shop Now"
+          }
+        },
+        {
+          "type": "kit",
+          "settings": {
+            "title": "The Date Night Kit",
+            "price_now": "$26.24",
+            "price_was": "$34.99",
+            "description": "Massager, vibrating ring, condoms & lube. Complete couples experience.",
+            "button_text": "Shop Now"
+          }
+        },
+        {
+          "type": "benefit",
+          "settings": { "text": "Save up to 57% vs buying separately" }
+        },
+        {
+          "type": "benefit",
+          "settings": { "text": "Everything curated and ready to go" }
+        },
+        {
+          "type": "benefit",
+          "settings": { "text": "Discreet single-box delivery" }
+        },
+        {
+          "type": "benefit",
+          "settings": { "text": "25% OFF Valentine's Sale" }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

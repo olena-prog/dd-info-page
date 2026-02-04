@@ -1,0 +1,190 @@
+{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="sale-cta-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
+  <div class="sale-cta-glow"></div>
+
+  <div class="container">
+    <div class="sale-cta-content">
+      {% if section.settings.show_badge %}
+        <div class="badge badge-primary" style="margin-bottom: 1.25rem; background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); color: white;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+          <span>{{ section.settings.badge_text }}</span>
+        </div>
+      {% endif %}
+
+      <h2 class="font-black">{{ section.settings.title }}</h2>
+
+      <div class="sale-cta-box">
+        <div class="sale-cta-discount">{{ section.settings.discount_text }}</div>
+        <p>{{ section.settings.promo_text }}</p>
+        <p>{{ section.settings.promo_subtext }}</p>
+      </div>
+
+      <div class="sale-cta-buttons">
+        {% if section.settings.primary_button_text != blank %}
+          <a href="{{ section.settings.primary_button_url }}"
+             {% if section.settings.primary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+             class="btn btn-primary btn-lg">
+            {{ section.settings.primary_button_text }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        {% endif %}
+
+        {% if section.settings.secondary_button_text != blank %}
+          <a href="{{ section.settings.secondary_button_url }}"
+             {% if section.settings.secondary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+             class="btn btn-amazon btn-lg">
+            {{ section.settings.secondary_button_text }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        {% endif %}
+      </div>
+
+      {% if section.settings.disclaimer != blank %}
+        <p class="sale-cta-disclaimer">{{ section.settings.disclaimer }}</p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Valentine's Sale CTA",
+  "tag": "section",
+  "class": "section-sale-cta",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Badge"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "Limited Time Offer"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Valentine's Sale"
+    },
+    {
+      "type": "text",
+      "id": "discount_text",
+      "label": "Discount Text",
+      "default": "25% OFF"
+    },
+    {
+      "type": "text",
+      "id": "promo_text",
+      "label": "Promo Text",
+      "default": "No code needed"
+    },
+    {
+      "type": "text",
+      "id": "promo_subtext",
+      "label": "Promo Subtext",
+      "default": "Auto-applied at checkout • Feb 1-14"
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Button Text",
+      "default": "Shop Valentine's Sale"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "primary_button_new_tab",
+      "label": "Open in New Tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Button Text",
+      "default": "Shop on Amazon"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "secondary_button_new_tab",
+      "label": "Open in New Tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Footer"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "*Discount applied automatically at checkout – no code needed"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#0F172A"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "presets": [
+    {
+      "name": "Valentine's Sale CTA",
+      "category": "CTA"
+    }
+  ]
+}
+{% endschema %}

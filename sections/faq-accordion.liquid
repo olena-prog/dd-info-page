@@ -1,0 +1,444 @@
+{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="faq-section section-bg-pattern" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <div class="faq-content">
+      {%- comment -%} Header {%- endcomment -%}
+      <div class="faq-header">
+        {% if section.settings.show_badge %}
+          <div class="badge badge-primary" style="margin-bottom: 1rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
+            <span>{{ section.settings.badge_text }}</span>
+          </div>
+        {% endif %}
+
+        <h2 class="faq-title font-black">{{ section.settings.title }}</h2>
+
+        {% if section.settings.subtitle != blank %}
+          <p class="faq-subtitle">{{ section.settings.subtitle }}</p>
+        {% endif %}
+      </div>
+
+      {%- comment -%} FAQ Items {%- endcomment -%}
+      <div class="faq-list" id="faq-accordion-{{ section.id }}">
+        {% for block in section.blocks %}
+          {% if block.type == 'faq_item' %}
+            <div class="faq-item" {{ block.shopify_attributes }} data-faq-item>
+              <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-{{ block.id }}">
+                <span class="faq-question-text">{{ block.settings.question }}</span>
+                <span class="faq-icon">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="faq-icon-minus"><path d="M5 12h14"/></svg>
+                </span>
+              </button>
+              <div class="faq-answer" id="faq-answer-{{ block.id }}" aria-hidden="true">
+                <div class="faq-answer-content">
+                  {{ block.settings.answer }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {%- comment -%} Contact CTA {%- endcomment -%}
+      {% if section.settings.show_contact_cta %}
+        <div class="faq-contact">
+          <p class="faq-contact-text">{{ section.settings.contact_text }}</p>
+          {% if section.settings.contact_button_text != blank %}
+            <a href="{{ section.settings.contact_button_url }}"
+               {% if section.settings.contact_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+               class="btn btn-secondary">
+              {{ section.settings.contact_button_text }}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+          {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  .faq-section {
+    position: relative;
+  }
+
+  .faq-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .faq-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .faq-title {
+    font-size: 1.75rem;
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+    color: var(--color-foreground);
+  }
+
+  .faq-subtitle {
+    font-size: 1rem;
+    color: var(--color-muted);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .faq-item {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+  }
+
+  .faq-item:hover {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+  }
+
+  .faq-item.active {
+    border-color: var(--color-primary);
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
+  }
+
+  .faq-question {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-foreground);
+    transition: color 0.2s ease;
+  }
+
+  .faq-question:hover {
+    color: var(--color-primary);
+  }
+
+  .faq-question-text {
+    flex: 1;
+  }
+
+  .faq-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-primary);
+  }
+
+  .faq-icon-minus {
+    display: none;
+  }
+
+  .faq-item.active .faq-icon-plus {
+    display: none;
+  }
+
+  .faq-item.active .faq-icon-minus {
+    display: block;
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .faq-item.active .faq-answer {
+    max-height: 500px;
+  }
+
+  .faq-answer-content {
+    padding: 0 1.25rem 1.25rem;
+    font-size: 0.938rem;
+    line-height: 1.7;
+    color: var(--color-muted);
+  }
+
+  .faq-contact {
+    margin-top: 2.5rem;
+    text-align: center;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.1));
+    border-radius: 16px;
+    border: 1px solid rgba(59, 130, 246, 0.1);
+  }
+
+  .faq-contact-text {
+    font-size: 1rem;
+    color: var(--color-foreground);
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .faq-title {
+      font-size: 2.25rem;
+    }
+
+    .faq-subtitle {
+      font-size: 1.125rem;
+    }
+
+    .faq-question {
+      padding: 1.5rem;
+      font-size: 1.063rem;
+    }
+
+    .faq-answer-content {
+      padding: 0 1.5rem 1.5rem;
+      font-size: 1rem;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const accordion = document.getElementById('faq-accordion-{{ section.id }}');
+    if (!accordion) return;
+
+    const items = accordion.querySelectorAll('[data-faq-item]');
+
+    items.forEach(item => {
+      const button = item.querySelector('.faq-question');
+      const answer = item.querySelector('.faq-answer');
+
+      button.addEventListener('click', () => {
+        const isActive = item.classList.contains('active');
+
+        // Close all other items (optional - for single open accordion)
+        {% if section.settings.single_open %}
+        items.forEach(otherItem => {
+          if (otherItem !== item) {
+            otherItem.classList.remove('active');
+            otherItem.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+            otherItem.querySelector('.faq-answer').setAttribute('aria-hidden', 'true');
+          }
+        });
+        {% endif %}
+
+        // Toggle current item
+        item.classList.toggle('active');
+        button.setAttribute('aria-expanded', !isActive);
+        answer.setAttribute('aria-hidden', isActive);
+      });
+    });
+
+    // Auto-open first item if configured
+    {% if section.settings.open_first %}
+    const firstItem = items[0];
+    if (firstItem) {
+      firstItem.classList.add('active');
+      firstItem.querySelector('.faq-question').setAttribute('aria-expanded', 'true');
+      firstItem.querySelector('.faq-answer').setAttribute('aria-hidden', 'false');
+    }
+    {% endif %}
+  });
+</script>
+
+{% schema %}
+{
+  "name": "FAQ Accordion",
+  "tag": "section",
+  "class": "section-faq",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "FAQ"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "textarea",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Everything you need to know about Dynamo Delay"
+    },
+    {
+      "type": "header",
+      "content": "Accordion Behavior"
+    },
+    {
+      "type": "checkbox",
+      "id": "single_open",
+      "label": "Only One Item Open at a Time",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Auto-Open First Item",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Contact CTA"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_contact_cta",
+      "label": "Show Contact Section",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "contact_text",
+      "label": "Contact Text",
+      "default": "Still have questions? We're here to help!"
+    },
+    {
+      "type": "text",
+      "id": "contact_button_text",
+      "label": "Contact Button Text",
+      "default": "Contact Support"
+    },
+    {
+      "type": "url",
+      "id": "contact_button_url",
+      "label": "Contact Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "contact_button_new_tab",
+      "label": "Open in New Tab",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#F8FAFC"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 64
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq_item",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "How does Dynamo Delay work?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Dynamo Delay contains 13% Lidocaine, a topical anesthetic that gently reduces sensitivity to help delay climax. Simply apply 3-10 sprays to the head and shaft, let it absorb for a few minutes, and enjoy longer-lasting intimacy.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ Accordion",
+      "category": "Content",
+      "blocks": [
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How does Dynamo Delay work?",
+            "answer": "<p>Dynamo Delay contains 13% Lidocaine, a topical anesthetic that gently reduces sensitivity to help delay climax. Simply apply 3-10 sprays to the head and shaft, let it absorb for a few minutes, and enjoy longer-lasting intimacy.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How long does it take to work?",
+            "answer": "<p>Dynamo Delay begins working within 5-10 minutes after application. For best results, apply and allow time for absorption before intimacy.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is it safe for my partner?",
+            "answer": "<p>Yes! Once absorbed, Dynamo Delay won't transfer to your partner. We recommend waiting until the product is fully absorbed (about 10 minutes) before intimacy.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "How many sprays should I use?",
+            "answer": "<p>We recommend starting with 3-5 sprays and adjusting based on your needs. Most users find their ideal amount is between 3-10 sprays. Start low and work up to find what works best for you.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "Is the packaging discreet?",
+            "answer": "<p>Absolutely. All orders ship in plain, unmarked packaging with no indication of the contents. Your privacy is our priority.</p>"
+          }
+        },
+        {
+          "type": "faq_item",
+          "settings": {
+            "question": "What's your return policy?",
+            "answer": "<p>We offer a 30-day satisfaction guarantee. If you're not completely satisfied with your purchase, contact our support team for a hassle-free return.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

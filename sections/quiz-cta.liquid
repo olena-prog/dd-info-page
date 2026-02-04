@@ -1,0 +1,138 @@
+{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="quiz-section" style="background-color: {{ section.settings.background_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
+  <div class="quiz-content">
+    <h2 class="font-black">{{ section.settings.title }}</h2>
+    <p>{{ section.settings.description }}</p>
+
+    <ul class="quiz-benefits">
+      {% for block in section.blocks %}
+        {% if block.type == 'benefit' %}
+          <li class="quiz-benefit" {{ block.shopify_attributes }}>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            {{ block.settings.text }}
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+
+    <a href="{{ section.settings.button_url }}"
+       {% if section.settings.button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+       class="quiz-btn">
+      {{ section.settings.button_text }}
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+
+    {% if section.settings.disclaimer != blank %}
+      <p class="quiz-disclaimer">{{ section.settings.disclaimer }}</p>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Quiz CTA",
+  "tag": "section",
+  "class": "section-quiz",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Not Sure If Dynamo Spray Is Right for You?"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "label": "Description",
+      "default": "Some men need fast action. Others need maximum control. Take our 60-second quiz to find which delay solution fits your lifestyle best."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Take the Free Quiz"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_new_tab",
+      "label": "Open in New Tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "*Discount applied automatically at checkout – no code needed"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#3B82F6"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 64
+    }
+  ],
+  "blocks": [
+    {
+      "type": "benefit",
+      "name": "Benefit",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Benefit Text",
+          "default": "Get your personalized match"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quiz CTA",
+      "category": "CTA",
+      "blocks": [
+        { "type": "benefit", "settings": { "text": "Get your personalized match" } },
+        { "type": "benefit", "settings": { "text": "Keep your 25% Valentine's discount" } },
+        { "type": "benefit", "settings": { "text": "100% confidential quiz" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

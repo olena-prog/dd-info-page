@@ -1,0 +1,343 @@
+{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="experience-section section-bg-pattern" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <div class="experience-content">
+      {%- comment -%} Header {%- endcomment -%}
+      <div class="experience-header">
+        <h2 class="font-black">{{ section.settings.title }}</h2>
+        <p class="text-muted">{{ section.settings.subtitle }}</p>
+      </div>
+
+      <div class="experience-grid">
+        {%- comment -%} Comparison Column {%- endcomment -%}
+        <div class="experience-comparison">
+          {%- comment -%} Before Card {%- endcomment -%}
+          <div class="experience-card experience-card--before">
+            <div class="experience-card-header">
+              <div class="experience-card-icon experience-card-icon--before">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              </div>
+              <h3>{{ section.settings.before_title }}</h3>
+            </div>
+            <ul class="experience-list">
+              {% for block in section.blocks %}
+                {% if block.type == 'before_item' %}
+                  <li class="experience-list-item" {{ block.shopify_attributes }}>
+                    {% case block.settings.icon %}
+                      {% when 'clock' %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      {% when 'brain' %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/></svg>
+                      {% when 'heart' %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                      {% when 'shield' %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                    {% endcase %}
+                    <span>{{ block.settings.text }}</span>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+
+          {%- comment -%} After Card {%- endcomment -%}
+          <div class="experience-card experience-card--after">
+            <div class="experience-card-header">
+              <div class="experience-card-icon experience-card-icon--after">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              </div>
+              <h3>{{ section.settings.after_title }}</h3>
+            </div>
+            <ul class="experience-list">
+              {% for block in section.blocks %}
+                {% if block.type == 'after_item' %}
+                  <li class="experience-list-item" {{ block.shopify_attributes }}>
+                    {% case block.settings.icon %}
+                      {% when 'clock' %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                      {% when 'brain' %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/><path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/><path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/></svg>
+                      {% when 'heart' %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+                      {% when 'shield' %}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                    {% endcase %}
+                    <span>{{ block.settings.text }}</span>
+                  </li>
+                {% endif %}
+              {% endfor %}
+            </ul>
+          </div>
+
+          {%- comment -%} Stats {%- endcomment -%}
+          <div class="experience-stats">
+            {% for block in section.blocks %}
+              {% if block.type == 'stat' %}
+                <div class="experience-stat" {{ block.shopify_attributes }}>
+                  <span class="experience-stat-value">{{ block.settings.value }}</span>
+                  <span class="experience-stat-label">{{ block.settings.label }}</span>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+
+        {%- comment -%} Video Column {%- endcomment -%}
+        <div>
+          <div class="experience-video" id="experience-video-container">
+            {% if section.settings.video != blank %}
+              <video id="experience-video" playsinline>
+                <source src="{{ section.settings.video.sources[0].url }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            {% elsif section.settings.video_url != blank %}
+              <video id="experience-video" playsinline>
+                <source src="{{ section.settings.video_url }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            {% elsif section.settings.video_poster != blank %}
+              <img
+                src="{{ section.settings.video_poster | image_url: width: 600 }}"
+                alt="{{ section.settings.video_poster.alt | default: 'Results video' }}"
+                loading="lazy"
+                style="width: 100%; height: 100%; object-fit: cover;"
+              >
+            {% else %}
+              <div class="image-upload-placeholder" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #1e293b;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: rgba(255,255,255,0.3);"><polygon points="23 7 16 12 23 17 23 7"/><rect width="15" height="14" x="1" y="5" rx="2" ry="2"/></svg>
+                <p style="color: rgba(255,255,255,0.4); font-size: 13px; margin-top: 12px; text-align: center;">Upload Video<br><small>(3:4 aspect ratio recommended)</small></p>
+              </div>
+            {% endif %}
+
+            {%- comment -%} Play Overlay {%- endcomment -%}
+            {% if section.settings.video != blank or section.settings.video_url != blank %}
+              <div class="experience-video-overlay" id="video-overlay" onclick="playExperienceVideo()">
+                <div class="experience-video-play">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 3 20 12 6 21 6 3"/></svg>
+                </div>
+                <p class="experience-video-text">{{ section.settings.video_cta_text }}</p>
+                <p class="experience-video-subtext">{{ section.settings.video_cta_subtext }}</p>
+              </div>
+            {% endif %}
+          </div>
+          <p class="experience-video-note">{{ section.settings.video_note }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function playExperienceVideo() {
+    const video = document.getElementById('experience-video');
+    const overlay = document.getElementById('video-overlay');
+
+    if (video && overlay) {
+      video.controls = true;
+      video.muted = false;
+      video.play();
+      overlay.style.display = 'none';
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Before/After Experience",
+  "tag": "section",
+  "class": "section-experience",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "What You'll Experience"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Real transformation backed by real results"
+    },
+    {
+      "type": "header",
+      "content": "Before/After Titles"
+    },
+    {
+      "type": "text",
+      "id": "before_title",
+      "label": "Before Title",
+      "default": "Before Dynamo Delay"
+    },
+    {
+      "type": "text",
+      "id": "after_title",
+      "label": "After Title",
+      "default": "After Dynamo Delay"
+    },
+    {
+      "type": "header",
+      "content": "Video"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Upload Video",
+      "info": "MP4 format recommended (3:4 aspect ratio)"
+    },
+    {
+      "type": "text",
+      "id": "video_url",
+      "label": "External Video URL",
+      "info": "Or enter an external video URL (MP4)"
+    },
+    {
+      "type": "image_picker",
+      "id": "video_poster",
+      "label": "Video Poster/Thumbnail",
+      "info": "Shown before video plays or as fallback"
+    },
+    {
+      "type": "text",
+      "id": "video_cta_text",
+      "label": "Video CTA Text",
+      "default": "Watch Real Results"
+    },
+    {
+      "type": "text",
+      "id": "video_cta_subtext",
+      "label": "Video CTA Subtext",
+      "default": "Tap to play"
+    },
+    {
+      "type": "text",
+      "id": "video_note",
+      "label": "Video Note",
+      "default": "Turn on sound for the full experience"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "before_item",
+      "name": "Before Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "clock", "label": "Clock" },
+            { "value": "brain", "label": "Brain" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "shield", "label": "Shield" }
+          ],
+          "default": "clock"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Lasting 2-5 minutes"
+        }
+      ]
+    },
+    {
+      "type": "after_item",
+      "name": "After Item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "clock", "label": "Clock" },
+            { "value": "brain", "label": "Brain" },
+            { "value": "heart", "label": "Heart" },
+            { "value": "shield", "label": "Shield" }
+          ],
+          "default": "clock"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Lasting 15-30+ minutes"
+        }
+      ]
+    },
+    {
+      "type": "stat",
+      "name": "Statistic",
+      "settings": [
+        {
+          "type": "text",
+          "id": "value",
+          "label": "Value",
+          "default": "3-5x"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Longer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Before/After Experience",
+      "category": "Comparison",
+      "blocks": [
+        { "type": "before_item", "settings": { "icon": "clock", "text": "Lasting 2-5 minutes" } },
+        { "type": "before_item", "settings": { "icon": "brain", "text": "Feeling anxious and rushed" } },
+        { "type": "before_item", "settings": { "icon": "heart", "text": "Avoiding intimacy" } },
+        { "type": "before_item", "settings": { "icon": "shield", "text": "Low confidence" } },
+        { "type": "after_item", "settings": { "icon": "clock", "text": "Lasting 15-30+ minutes" } },
+        { "type": "after_item", "settings": { "icon": "brain", "text": "Feeling relaxed and in control" } },
+        { "type": "after_item", "settings": { "icon": "heart", "text": "Enjoying deeper connection" } },
+        { "type": "after_item", "settings": { "icon": "shield", "text": "Confident and satisfied" } },
+        { "type": "stat", "settings": { "value": "3-5x", "label": "Longer" } },
+        { "type": "stat", "settings": { "value": "100%", "label": "Control" } },
+        { "type": "stat", "settings": { "value": "4.8", "label": "Rating" } },
+        { "type": "stat", "settings": { "value": "50K+", "label": "Customers" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,123 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Dynamo Delay Landing Page",
+    "theme_version": "1.0.0",
+    "theme_author": "Dynamo Delay",
+    "theme_documentation_url": "https://dynamodelay.com",
+    "theme_support_url": "https://dynamodelay.com/support"
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Primary Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_primary",
+        "label": "Primary Color",
+        "default": "#3B82F6"
+      },
+      {
+        "type": "color",
+        "id": "color_primary_hover",
+        "label": "Primary Hover Color",
+        "default": "#2563EB"
+      },
+      {
+        "type": "color",
+        "id": "color_secondary",
+        "label": "Secondary Color",
+        "default": "#EF4444"
+      },
+      {
+        "type": "header",
+        "content": "Background Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_background",
+        "label": "Background Color",
+        "default": "#FFFFFF"
+      },
+      {
+        "type": "color",
+        "id": "color_foreground",
+        "label": "Dark Background Color",
+        "default": "#0F172A"
+      },
+      {
+        "type": "color",
+        "id": "color_background_grey",
+        "label": "Grey Background Color",
+        "default": "#F8FAFC"
+      },
+      {
+        "type": "header",
+        "content": "Text Colors"
+      },
+      {
+        "type": "color",
+        "id": "color_text_primary",
+        "label": "Primary Text Color",
+        "default": "#0F172A"
+      },
+      {
+        "type": "color",
+        "id": "color_text_muted",
+        "label": "Muted Text Color",
+        "default": "#64748B"
+      }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      {
+        "type": "font_picker",
+        "id": "type_header_font",
+        "default": "poppins_n9",
+        "label": "Heading Font"
+      },
+      {
+        "type": "font_picker",
+        "id": "type_body_font",
+        "default": "poppins_n4",
+        "label": "Body Font"
+      }
+    ]
+  },
+  {
+    "name": "Buttons",
+    "settings": [
+      {
+        "type": "range",
+        "id": "button_border_radius",
+        "min": 0,
+        "max": 20,
+        "step": 1,
+        "unit": "px",
+        "label": "Button Border Radius",
+        "default": 8
+      },
+      {
+        "type": "checkbox",
+        "id": "button_show_glow",
+        "label": "Show Button Glow Effect",
+        "default": true
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon Image"
+      }
+    ]
+  }
+]

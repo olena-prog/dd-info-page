@@ -1,0 +1,495 @@
+{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="pack-selector-section section-bg-pattern" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <div class="pack-selector-content">
+      {%- comment -%} Header {%- endcomment -%}
+      <div class="pack-selector-header">
+        <h2 class="font-black" style="color: {{ section.settings.title_color }};">{{ section.settings.title }}</h2>
+        <p>{{ section.settings.subtitle }}</p>
+      </div>
+
+      <div class="pack-selector-grid">
+        {%- comment -%} Product Image Column {%- endcomment -%}
+        <div class="pack-product-image">
+          {% if section.settings.product_image != blank %}
+            <img
+              src="{{ section.settings.product_image | image_url: width: 600 }}"
+              srcset="{{ section.settings.product_image | image_url: width: 300 }} 300w,
+                      {{ section.settings.product_image | image_url: width: 450 }} 450w,
+                      {{ section.settings.product_image | image_url: width: 600 }} 600w"
+              sizes="(max-width: 1024px) 300px, 400px"
+              alt="{{ section.settings.product_image.alt | default: 'Dynamo Delay Product' }}"
+              loading="lazy"
+            >
+          {% else %}
+            <div class="image-upload-placeholder" style="min-height: 300px;">
+              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: #94a3b8;"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              <p style="color: #94a3b8; font-size: 14px; margin-top: 12px;">Upload Product Image<br><small>(Recommended: 600x600px)</small></p>
+            </div>
+          {% endif %}
+
+          {%- comment -%} Rating Badge {%- endcomment -%}
+          {% if section.settings.show_rating_badge %}
+            <div class="pack-rating-badge">
+              <div class="pack-rating-value">
+                {{ section.settings.rating }}
+                <span class="star">★★★★★</span>
+              </div>
+              <span class="pack-rating-count">{{ section.settings.review_count }}</span>
+            </div>
+          {% endif %}
+
+          {%- comment -%} USA Badge {%- endcomment -%}
+          {% if section.settings.show_usa_badge %}
+            <div class="pack-usa-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg>
+              <div class="pack-usa-badge-text">
+                <p>{{ section.settings.usa_badge_title }}</p>
+                <p>{{ section.settings.usa_badge_subtitle }}</p>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        {%- comment -%} Pack Selection Column {%- endcomment -%}
+        <div>
+          {%- comment -%} Pack Options {%- endcomment -%}
+          <div class="pack-options" id="pack-options">
+            {% for block in section.blocks %}
+              {% if block.type == 'pack_option' %}
+                <div
+                  class="pack-option {% if block.settings.is_selected %}pack-option--selected{% else %}pack-option--default{% endif %}"
+                  data-pack-name="{{ block.settings.name }}"
+                  data-pack-was="{{ block.settings.price_was }}"
+                  data-pack-now="{{ block.settings.price_now }}"
+                  data-pack-url="{{ block.settings.button_url }}"
+                  onclick="selectPack(this)"
+                  {{ block.shopify_attributes }}
+                >
+                  {% if block.settings.badge != blank %}
+                    <span class="pack-option-badge {% if block.settings.badge_style == 'best_value' %}pack-option-badge--best{% else %}pack-option-badge--popular{% endif %}">
+                      {{ block.settings.badge }}
+                    </span>
+                  {% endif %}
+                  <h3>{{ block.settings.name }}</h3>
+                  <p class="pack-option-was">{{ block.settings.price_was }}</p>
+                  <p class="pack-option-price" style="{% if block.settings.is_selected %}color: white;{% else %}color: var(--color-primary);{% endif %}">{{ block.settings.price_now }}</p>
+                  <p class="pack-option-save" style="{% if block.settings.is_selected %}color: rgba(255,255,255,0.8);{% else %}color: var(--color-secondary);{% endif %}">{{ block.settings.save_text }}</p>
+                  {% if block.settings.is_selected %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0.5rem auto 0;"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+                  {% endif %}
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+
+          {%- comment -%} Summary Box {%- endcomment -%}
+          <div class="pack-summary">
+            <p class="pack-summary-label">{{ section.settings.summary_label }}</p>
+            <p class="pack-summary-selection" id="pack-selection-name">{{ section.settings.default_selection }}</p>
+            <div class="pack-summary-price">
+              <span class="pack-summary-was" id="pack-price-was">{{ section.settings.default_price_was }}</span>
+              <span class="pack-summary-now" id="pack-price-now">{{ section.settings.default_price_now }}</span>
+            </div>
+            <div class="pack-summary-discount">
+              <span>{{ section.settings.discount_text }}</span>
+            </div>
+          </div>
+
+          {%- comment -%} Buttons {%- endcomment -%}
+          <div class="pack-buttons">
+            <a href="{{ section.settings.primary_button_url }}" id="pack-primary-btn"
+               {% if section.settings.primary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+               class="btn btn-primary btn-lg btn-full">
+              {{ section.settings.primary_button_text }}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+
+            {% if section.settings.secondary_button_text != blank %}
+              <a href="{{ section.settings.secondary_button_url }}"
+                 {% if section.settings.secondary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+                 class="btn btn-amazon btn-lg btn-full">
+                {{ section.settings.secondary_button_text }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </a>
+            {% endif %}
+          </div>
+
+          {% if section.settings.disclaimer != blank %}
+            <p class="pack-disclaimer">{{ section.settings.disclaimer }}</p>
+          {% endif %}
+
+          {%- comment -%} Trust Badges {%- endcomment -%}
+          <div class="pack-trust-badges">
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+              {{ section.settings.trust_badge_1 }}
+            </span>
+            <span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+              {{ section.settings.trust_badge_2 }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function selectPack(element) {
+    // Remove selection from all options
+    document.querySelectorAll('.pack-option').forEach(function(opt) {
+      opt.classList.remove('pack-option--selected');
+      opt.classList.add('pack-option--default');
+      const price = opt.querySelector('.pack-option-price');
+      const save = opt.querySelector('.pack-option-save');
+      if (price) price.style.color = 'var(--color-primary)';
+      if (save) save.style.color = 'var(--color-secondary)';
+      // Remove checkmark
+      const checkmark = opt.querySelector('svg');
+      if (checkmark) checkmark.style.display = 'none';
+    });
+
+    // Add selection to clicked option
+    element.classList.remove('pack-option--default');
+    element.classList.add('pack-option--selected');
+    const price = element.querySelector('.pack-option-price');
+    const save = element.querySelector('.pack-option-save');
+    if (price) price.style.color = 'white';
+    if (save) save.style.color = 'rgba(255,255,255,0.8)';
+
+    // Update summary
+    const name = element.dataset.packName;
+    const was = element.dataset.packWas;
+    const now = element.dataset.packNow;
+    const url = element.dataset.packUrl;
+
+    document.getElementById('pack-selection-name').textContent = name;
+    document.getElementById('pack-price-was').textContent = was;
+    document.getElementById('pack-price-now').textContent = now;
+
+    if (url) {
+      document.getElementById('pack-primary-btn').href = url;
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Product Pack Selector",
+  "tag": "section",
+  "class": "section-pack-selector",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Choose Your Pack"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title Color",
+      "default": "#3B82F6"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Stock up and save more. All orders ship discreetly."
+    },
+    {
+      "type": "header",
+      "content": "Product Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "product_image",
+      "label": "Product Image",
+      "info": "Recommended: 600x600px transparent PNG"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_rating_badge",
+      "label": "Show Rating Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Rating",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review Count",
+      "default": "49,847+ reviews"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_usa_badge",
+      "label": "Show USA Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "usa_badge_title",
+      "label": "USA Badge Title",
+      "default": "Made in USA"
+    },
+    {
+      "type": "text",
+      "id": "usa_badge_subtitle",
+      "label": "USA Badge Subtitle",
+      "default": "Premium Quality"
+    },
+    {
+      "type": "header",
+      "content": "Summary Box"
+    },
+    {
+      "type": "text",
+      "id": "summary_label",
+      "label": "Summary Label",
+      "default": "Your Selection"
+    },
+    {
+      "type": "text",
+      "id": "default_selection",
+      "label": "Default Selection Name",
+      "default": "2 Pack"
+    },
+    {
+      "type": "text",
+      "id": "default_price_was",
+      "label": "Default Price Was",
+      "default": "$29.99"
+    },
+    {
+      "type": "text",
+      "id": "default_price_now",
+      "label": "Default Price Now",
+      "default": "$22.49"
+    },
+    {
+      "type": "text",
+      "id": "discount_text",
+      "label": "Discount Badge Text",
+      "default": "25% OFF – Valentine's Sale"
+    },
+    {
+      "type": "header",
+      "content": "Primary Button"
+    },
+    {
+      "type": "text",
+      "id": "primary_button_text",
+      "label": "Button Text",
+      "default": "Shop Valentine's Sale – 25% OFF"
+    },
+    {
+      "type": "url",
+      "id": "primary_button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "primary_button_new_tab",
+      "label": "Open in New Tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Secondary Button"
+    },
+    {
+      "type": "text",
+      "id": "secondary_button_text",
+      "label": "Button Text",
+      "default": "Shop on Amazon"
+    },
+    {
+      "type": "url",
+      "id": "secondary_button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "secondary_button_new_tab",
+      "label": "Open in New Tab",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Footer"
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer Text",
+      "default": "*Discount applied automatically at checkout – no code needed"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_1",
+      "label": "Trust Badge 1",
+      "default": "FDA-Compliant"
+    },
+    {
+      "type": "text",
+      "id": "trust_badge_2",
+      "label": "Trust Badge 2",
+      "default": "Discreet Shipping"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pack_option",
+      "name": "Pack Option",
+      "settings": [
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Pack Name",
+          "default": "2 Pack"
+        },
+        {
+          "type": "text",
+          "id": "price_was",
+          "label": "Original Price",
+          "default": "$29.99"
+        },
+        {
+          "type": "text",
+          "id": "price_now",
+          "label": "Sale Price",
+          "default": "$22.49"
+        },
+        {
+          "type": "text",
+          "id": "save_text",
+          "label": "Save Text",
+          "default": "Save $7.50"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge Text",
+          "info": "Leave blank for no badge"
+        },
+        {
+          "type": "select",
+          "id": "badge_style",
+          "label": "Badge Style",
+          "options": [
+            { "value": "popular", "label": "Popular (Blue)" },
+            { "value": "best_value", "label": "Best Value (Red)" }
+          ],
+          "default": "popular"
+        },
+        {
+          "type": "checkbox",
+          "id": "is_selected",
+          "label": "Selected by Default",
+          "default": false
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Custom Buy URL",
+          "info": "Optional: overrides main button URL when this pack is selected"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Pack Selector",
+      "category": "Product",
+      "blocks": [
+        {
+          "type": "pack_option",
+          "settings": {
+            "name": "Single",
+            "price_was": "$18.99",
+            "price_now": "$14.24",
+            "save_text": "Save $4.75",
+            "is_selected": false
+          }
+        },
+        {
+          "type": "pack_option",
+          "settings": {
+            "name": "2 Pack",
+            "price_was": "$29.99",
+            "price_now": "$22.49",
+            "save_text": "Save $7.50",
+            "badge": "POPULAR",
+            "badge_style": "popular",
+            "is_selected": true
+          }
+        },
+        {
+          "type": "pack_option",
+          "settings": {
+            "name": "3 Pack",
+            "price_was": "$39.99",
+            "price_now": "$29.99",
+            "save_text": "Save $10.00",
+            "is_selected": false
+          }
+        },
+        {
+          "type": "pack_option",
+          "settings": {
+            "name": "5 Pack",
+            "price_was": "$64.95",
+            "price_now": "$48.71",
+            "save_text": "Save $16.24",
+            "badge": "BEST VALUE",
+            "badge_style": "best_value",
+            "is_selected": false
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

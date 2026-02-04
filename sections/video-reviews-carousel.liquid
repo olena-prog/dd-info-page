@@ -1,0 +1,256 @@
+{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="reviews-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <div class="reviews-content">
+      {%- comment -%} Header {%- endcomment -%}
+      <div class="reviews-header">
+        <h2 class="font-black">{{ section.settings.title }}</h2>
+        <p>{{ section.settings.subtitle }}</p>
+        <div class="reviews-rating">
+          <div class="stars">
+            {% for i in (1..5) %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+            {% endfor %}
+          </div>
+          <span class="reviews-rating-value">{{ section.settings.rating }}</span>
+          <span class="reviews-rating-count">({{ section.settings.review_count }})</span>
+        </div>
+      </div>
+
+      {%- comment -%} Carousel {%- endcomment -%}
+      <div class="reviews-carousel">
+        <div class="reviews-carousel-track" id="reviews-track">
+          {% for block in section.blocks %}
+            {% if block.type == 'review' %}
+              <div class="review-card" {{ block.shopify_attributes }}>
+                <div class="review-video">
+                  {% if block.settings.video != blank %}
+                    <video
+                      src="{{ block.settings.video.sources[0].url }}"
+                      loop
+                      playsinline
+                      muted
+                      autoplay
+                      loading="lazy"
+                    ></video>
+                  {% elsif block.settings.video_url != blank %}
+                    <video
+                      src="{{ block.settings.video_url }}"
+                      loop
+                      playsinline
+                      muted
+                      autoplay
+                      loading="lazy"
+                    ></video>
+                  {% elsif block.settings.image != blank %}
+                    <img
+                      src="{{ block.settings.image | image_url: width: 400 }}"
+                      srcset="{{ block.settings.image | image_url: width: 300 }} 300w,
+                              {{ block.settings.image | image_url: width: 400 }} 400w"
+                      sizes="(max-width: 768px) 85vw, 33vw"
+                      alt="{{ block.settings.image.alt | default: 'Review' }}"
+                      loading="lazy"
+                    >
+                  {% else %}
+                    <div class="image-upload-placeholder" style="height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; background-color: #f1f5f9;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: #94a3b8;"><polygon points="23 7 16 12 23 17 23 7"/><rect width="15" height="14" x="1" y="5" rx="2" ry="2"/></svg>
+                      <p style="color: #94a3b8; font-size: 11px; margin-top: 8px; text-align: center; padding: 0 10px;">Upload Video or Image</p>
+                    </div>
+                  {% endif %}
+                </div>
+                <div class="review-content">
+                  <div class="review-stars">
+                    {% for i in (1..5) %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#F59E0B" stroke="#F59E0B" stroke-width="2"><path d="M11.525 2.295a.53.53 0 0 1 .95 0l2.31 4.679a2.123 2.123 0 0 0 1.595 1.16l5.166.756a.53.53 0 0 1 .294.904l-3.736 3.638a2.123 2.123 0 0 0-.611 1.878l.882 5.14a.53.53 0 0 1-.771.56l-4.618-2.428a2.122 2.122 0 0 0-1.973 0L6.396 21.01a.53.53 0 0 1-.77-.56l.881-5.139a2.122 2.122 0 0 0-.611-1.879L2.16 9.795a.53.53 0 0 1 .294-.906l5.165-.755a2.122 2.122 0 0 0 1.597-1.16z"/></svg>
+                    {% endfor %}
+                  </div>
+                  <p class="review-text line-clamp-3">"{{ block.settings.review_text }}"</p>
+                  {% if block.settings.show_verified %}
+                    <div class="review-verified">
+                      <div class="review-verified-icon">✓</div>
+                      <span>{{ section.settings.verified_text }}</span>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        {%- comment -%} Navigation Buttons {%- endcomment -%}
+        <div class="reviews-nav">
+          <button class="reviews-nav-btn" onclick="scrollReviews(-1)" aria-label="Previous reviews">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+          </button>
+          <button class="reviews-nav-btn" onclick="scrollReviews(1)" aria-label="Next reviews">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function scrollReviews(direction) {
+    const track = document.getElementById('reviews-track');
+    if (track) {
+      const cardWidth = track.querySelector('.review-card')?.offsetWidth || 300;
+      const scrollAmount = cardWidth + 16; // card width + gap
+      track.scrollBy({
+        left: direction * scrollAmount,
+        behavior: 'smooth'
+      });
+    }
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Video Reviews Carousel",
+  "tag": "section",
+  "class": "section-reviews",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Real People. Real Results."
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Section Subtitle",
+      "default": "Trusted by thousands worldwide"
+    },
+    {
+      "type": "text",
+      "id": "rating",
+      "label": "Average Rating",
+      "default": "4.8"
+    },
+    {
+      "type": "text",
+      "id": "review_count",
+      "label": "Review Count",
+      "default": "49,847+ reviews"
+    },
+    {
+      "type": "text",
+      "id": "verified_text",
+      "label": "Verified Badge Text",
+      "default": "Verified Purchase"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#EFF6FF"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Video Review",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Video/Image"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Review Video",
+          "info": "Upload a video file (MP4 recommended, 4:5 aspect ratio)"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "External Video URL",
+          "info": "Or enter an external video URL (MP4)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Fallback Image",
+          "info": "Shown if no video is uploaded (4:5 aspect ratio recommended)"
+        },
+        {
+          "type": "header",
+          "content": "Review Content"
+        },
+        {
+          "type": "textarea",
+          "id": "review_text",
+          "label": "Review Text",
+          "default": "I bought this for my boyfriend because he always got nervous about finishing too fast. It actually helped a lot, now we don't feel rushed and we can just enjoy each other."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_verified",
+          "label": "Show Verified Badge",
+          "default": true
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video Reviews Carousel",
+      "category": "Testimonials",
+      "blocks": [
+        {
+          "type": "review",
+          "settings": {
+            "review_text": "I bought this for my boyfriend because he always got nervous about finishing too fast. It actually helped a lot, now we don't feel rushed and we can just enjoy each other.",
+            "show_verified": true
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "review_text": "I was skeptical but wow. It didn't numb anything, it just slowed things down enough so we could have a full moment together. Big difference.",
+            "show_verified": true
+          }
+        },
+        {
+          "type": "review",
+          "settings": {
+            "review_text": "We tried the spray together and it became part of our routine. It's easy, quick, and honestly makes our time feel way less pressured and more connected.",
+            "show_verified": true
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

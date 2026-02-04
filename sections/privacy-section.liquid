@@ -1,0 +1,209 @@
+{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+
+<section class="privacy-section section-bg-pattern" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
+  <div class="container">
+    <div class="privacy-content">
+      {%- comment -%} Header {%- endcomment -%}
+      <div class="privacy-header">
+        {% if section.settings.show_badge %}
+          <div class="badge badge-primary" style="margin-bottom: 1rem;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span>{{ section.settings.badge_text }}</span>
+          </div>
+        {% endif %}
+        <h2 class="font-black">{{ section.settings.title }}</h2>
+        <p>{{ section.settings.subtitle }}</p>
+      </div>
+
+      {%- comment -%} Privacy Cards {%- endcomment -%}
+      <div class="privacy-cards">
+        {% for block in section.blocks %}
+          {% if block.type == 'privacy_card' %}
+            <div class="privacy-card" {{ block.shopify_attributes }}>
+              <div class="privacy-card-header">
+                <div class="privacy-card-icon">
+                  {% case block.settings.icon %}
+                    {% when 'package' %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg>
+                    {% when 'shield' %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+                    {% when 'lock' %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                    {% when 'eye-off' %}
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49"/><path d="M14.084 14.158a3 3 0 0 1-4.242-4.242"/><path d="M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143"/><path d="m2 2 20 20"/></svg>
+                  {% endcase %}
+                </div>
+                <h3>{{ block.settings.title }}</h3>
+              </div>
+              <p>{{ block.settings.description }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      {%- comment -%} CTA {%- endcomment -%}
+      <div class="privacy-cta">
+        <a href="{{ section.settings.button_url }}"
+           {% if section.settings.button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+           class="btn btn-primary btn-lg" style="margin-bottom: 0.75rem;">
+          {{ section.settings.button_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        {% if section.settings.disclaimer != blank %}
+          <p class="text-muted text-xs">{{ section.settings.disclaimer }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Privacy Section",
+  "tag": "section",
+  "class": "section-privacy",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_badge",
+      "label": "Show Badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_text",
+      "label": "Badge Text",
+      "default": "100% Confidential"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Privacy Guaranteed"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Your confidence stays private from checkout to delivery"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button Text",
+      "default": "Shop Valentine's Sale – 25% OFF"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button URL"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_new_tab",
+      "label": "Open in New Tab",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "disclaimer",
+      "label": "Disclaimer",
+      "default": "*Discount applied automatically at checkout – no code needed"
+    },
+    {
+      "type": "header",
+      "content": "Section Styling"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#F8FAFC"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 80
+    }
+  ],
+  "blocks": [
+    {
+      "type": "privacy_card",
+      "name": "Privacy Card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "package", "label": "Package" },
+            { "value": "shield", "label": "Shield" },
+            { "value": "lock", "label": "Lock" },
+            { "value": "eye-off", "label": "Eye Off" }
+          ],
+          "default": "package"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Card Title",
+          "default": "Plain Packaging"
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Card Description",
+          "default": "No logos or product hints"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Privacy Section",
+      "category": "Trust",
+      "blocks": [
+        {
+          "type": "privacy_card",
+          "settings": {
+            "icon": "package",
+            "title": "Plain Packaging",
+            "description": "No logos or product hints"
+          }
+        },
+        {
+          "type": "privacy_card",
+          "settings": {
+            "icon": "shield",
+            "title": "Private Billing",
+            "description": "Discreet transaction details"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
