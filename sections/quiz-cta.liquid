@@ -1,31 +1,152 @@
 <section class="quiz-section" style="background-color: {{ section.settings.background_color }}; padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px;">
-  <div class="quiz-content">
-    <h2 class="font-black">{{ section.settings.title }}</h2>
-    <p>{{ section.settings.description }}</p>
+  <div class="quiz-container">
+    <div class="quiz-content">
+      <h2 class="quiz-title">{{ section.settings.title }}</h2>
+      <p class="quiz-description">{{ section.settings.description }}</p>
 
-    <ul class="quiz-benefits">
-      {% for block in section.blocks %}
-        {% if block.type == 'benefit' %}
-          <li class="quiz-benefit" {{ block.shopify_attributes }}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
-            {{ block.settings.text }}
-          </li>
-        {% endif %}
-      {% endfor %}
-    </ul>
+      <ul class="quiz-benefits">
+        {% for block in section.blocks %}
+          {% if block.type == 'benefit' %}
+            <li class="quiz-benefit" {{ block.shopify_attributes }}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+              {{ block.settings.text }}
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
 
-    <a href="{{ section.settings.button_url }}"
-       {% if section.settings.button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
-       class="quiz-btn">
-      {{ section.settings.button_text }}
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-    </a>
+      <a href="{{ section.settings.button_url }}"
+         {% if section.settings.button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+         class="quiz-btn">
+        {{ section.settings.button_text }}
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
 
-    {% if section.settings.disclaimer != blank %}
-      <p class="quiz-disclaimer">{{ section.settings.disclaimer }}</p>
-    {% endif %}
+      {% if section.settings.disclaimer != blank %}
+        <p class="quiz-disclaimer">{{ section.settings.disclaimer }}</p>
+      {% endif %}
+    </div>
   </div>
 </section>
+
+<style>
+  .quiz-section {
+    position: relative;
+  }
+
+  .quiz-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .quiz-container {
+      padding: 0 1.5rem;
+    }
+  }
+
+  .quiz-content {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .quiz-title {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .quiz-title {
+      font-size: 2.25rem;
+    }
+  }
+
+  .quiz-description {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+
+  @media (min-width: 768px) {
+    .quiz-description {
+      font-size: 1.125rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .quiz-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .quiz-benefits {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem 2rem;
+    }
+  }
+
+  .quiz-benefit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: 0.938rem;
+    color: #FFFFFF;
+  }
+
+  .quiz-benefit svg {
+    color: rgba(255, 255, 255, 0.9);
+    flex-shrink: 0;
+  }
+
+  .quiz-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    padding: 1rem 2rem;
+    background: #FFFFFF;
+    color: #3B82F6;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  }
+
+  .quiz-btn:hover {
+    background: #F8FAFC;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (min-width: 768px) {
+    .quiz-btn {
+      font-size: 1.063rem;
+      padding: 1rem 2.5rem;
+    }
+  }
+
+  .quiz-disclaimer {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin: 1rem 0 0;
+  }
+</style>
 
 {% schema %}
 {

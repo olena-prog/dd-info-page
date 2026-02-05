@@ -1,166 +1,453 @@
-<section class="pack-selector-section section-bg-pattern" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
-  <div class="container">
-    <div class="pack-selector-content">
-      {%- comment -%} Header {%- endcomment -%}
-      <div class="pack-selector-header">
-        <h2 class="font-black" style="color: {{ section.settings.title_color }};">{{ section.settings.title }}</h2>
-        <p>{{ section.settings.subtitle }}</p>
+<section class="pack-section" style="padding: 3rem 1rem; background-color: {{ section.settings.background_color }};">
+  <div class="pack-container">
+    {%- comment -%} Header {%- endcomment -%}
+    <div class="pack-header">
+      <h2 class="pack-title">{{ section.settings.title }}</h2>
+      <p class="pack-subtitle">{{ section.settings.subtitle }}</p>
+    </div>
+
+    <div class="pack-grid">
+      {%- comment -%} Product Image Column {%- endcomment -%}
+      <div class="pack-image-col">
+        {% if section.settings.product_image != blank %}
+          <img
+            src="{{ section.settings.product_image | image_url: width: 600 }}"
+            srcset="{{ section.settings.product_image | image_url: width: 300 }} 300w,
+                    {{ section.settings.product_image | image_url: width: 450 }} 450w,
+                    {{ section.settings.product_image | image_url: width: 600 }} 600w"
+            sizes="(max-width: 1024px) 280px, 350px"
+            width="{{ section.settings.product_image.width }}"
+            height="{{ section.settings.product_image.height }}"
+            alt="{{ section.settings.product_image.alt | default: 'Product' }}"
+            loading="lazy"
+            class="pack-product-img"
+          >
+        {% else %}
+          <div class="pack-image-placeholder">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            <span>Upload Product Image</span>
+          </div>
+        {% endif %}
+
+        {%- comment -%} Rating Badge {%- endcomment -%}
+        {% if section.settings.show_rating_badge %}
+          <div class="pack-rating">
+            <span class="pack-rating-stars">★★★★★</span>
+            <span class="pack-rating-value">{{ section.settings.rating }}</span>
+            <span class="pack-rating-count">{{ section.settings.review_count }}</span>
+          </div>
+        {% endif %}
       </div>
 
-      <div class="pack-selector-grid">
-        {%- comment -%} Product Image Column {%- endcomment -%}
-        <div class="pack-product-image">
-          {% if section.settings.product_image != blank %}
-            <img
-              src="{{ section.settings.product_image | image_url: width: 600 }}"
-              srcset="{{ section.settings.product_image | image_url: width: 300 }} 300w,
-                      {{ section.settings.product_image | image_url: width: 450 }} 450w,
-                      {{ section.settings.product_image | image_url: width: 600 }} 600w"
-              sizes="(max-width: 1024px) 300px, 400px"
-              width="{{ section.settings.product_image.width }}"
-              height="{{ section.settings.product_image.height }}"
-              alt="{{ section.settings.product_image.alt | default: 'Dynamo Delay Product' }}"
-              loading="lazy"
-            >
-          {% else %}
-            <div class="image-upload-placeholder" style="min-height: 300px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: #94a3b8;"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-              <p style="color: #94a3b8; font-size: 14px; margin-top: 12px;">Upload Product Image<br><small>(Recommended: 600x600px)</small></p>
-            </div>
-          {% endif %}
-
-          {%- comment -%} Rating Badge {%- endcomment -%}
-          {% if section.settings.show_rating_badge %}
-            <div class="pack-rating-badge">
-              <div class="pack-rating-value">
-                {{ section.settings.rating }}
-                <span class="star">★★★★★</span>
+      {%- comment -%} Pack Selection Column {%- endcomment -%}
+      <div class="pack-options-col">
+        {%- comment -%} Pack Options {%- endcomment -%}
+        <div class="pack-options">
+          {% for block in section.blocks %}
+            {% if block.type == 'pack_option' %}
+              <div
+                class="pack-option {% if block.settings.is_selected %}pack-option--selected{% endif %}"
+                data-pack-name="{{ block.settings.name }}"
+                data-pack-was="{{ block.settings.price_was }}"
+                data-pack-now="{{ block.settings.price_now }}"
+                data-pack-url="{{ block.settings.button_url }}"
+                onclick="selectPack(this)"
+                {{ block.shopify_attributes }}
+              >
+                {% if block.settings.badge != blank %}
+                  <span class="pack-badge {% if block.settings.badge_style == 'best_value' %}pack-badge--best{% endif %}">
+                    {{ block.settings.badge }}
+                  </span>
+                {% endif %}
+                <h3 class="pack-option-name">{{ block.settings.name }}</h3>
+                <p class="pack-option-was">{{ block.settings.price_was }}</p>
+                <p class="pack-option-price">{{ block.settings.price_now }}</p>
+                <p class="pack-option-save">{{ block.settings.save_text }}</p>
               </div>
-              <span class="pack-rating-count">{{ section.settings.review_count }}</span>
-            </div>
-          {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
 
-          {%- comment -%} USA Badge {%- endcomment -%}
-          {% if section.settings.show_usa_badge %}
-            <div class="pack-usa-badge">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/><path d="M12 22V12"/><path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7"/><path d="m7.5 4.27 9 5.15"/></svg>
-              <div class="pack-usa-badge-text">
-                <p>{{ section.settings.usa_badge_title }}</p>
-                <p>{{ section.settings.usa_badge_subtitle }}</p>
-              </div>
-            </div>
+        {%- comment -%} Summary Box {%- endcomment -%}
+        <div class="pack-summary">
+          <div class="pack-summary-row">
+            <span class="pack-summary-label">{{ section.settings.summary_label }}</span>
+            <span class="pack-summary-name" id="pack-selection-name">{{ section.settings.default_selection }}</span>
+          </div>
+          <div class="pack-summary-row">
+            <span class="pack-summary-was" id="pack-price-was">{{ section.settings.default_price_was }}</span>
+            <span class="pack-summary-now" id="pack-price-now">{{ section.settings.default_price_now }}</span>
+          </div>
+          <div class="pack-discount-badge">{{ section.settings.discount_text }}</div>
+        </div>
+
+        {%- comment -%} Buttons {%- endcomment -%}
+        <div class="pack-buttons">
+          <a href="{{ section.settings.primary_button_url }}" id="pack-primary-btn"
+             {% if section.settings.primary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+             class="pack-btn pack-btn-primary">
+            {{ section.settings.primary_button_text }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+
+          {% if section.settings.secondary_button_text != blank %}
+            <a href="{{ section.settings.secondary_button_url }}"
+               {% if section.settings.secondary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+               class="pack-btn pack-btn-amazon">
+              {{ section.settings.secondary_button_text }}
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
           {% endif %}
         </div>
 
-        {%- comment -%} Pack Selection Column {%- endcomment -%}
-        <div>
-          {%- comment -%} Pack Options {%- endcomment -%}
-          <div class="pack-options" id="pack-options">
-            {% for block in section.blocks %}
-              {% if block.type == 'pack_option' %}
-                <div
-                  class="pack-option {% if block.settings.is_selected %}pack-option--selected{% else %}pack-option--default{% endif %}"
-                  data-pack-name="{{ block.settings.name }}"
-                  data-pack-was="{{ block.settings.price_was }}"
-                  data-pack-now="{{ block.settings.price_now }}"
-                  data-pack-url="{{ block.settings.button_url }}"
-                  onclick="selectPack(this)"
-                  {{ block.shopify_attributes }}
-                >
-                  {% if block.settings.badge != blank %}
-                    <span class="pack-option-badge {% if block.settings.badge_style == 'best_value' %}pack-option-badge--best{% else %}pack-option-badge--popular{% endif %}">
-                      {{ block.settings.badge }}
-                    </span>
-                  {% endif %}
-                  <h3>{{ block.settings.name }}</h3>
-                  <p class="pack-option-was">{{ block.settings.price_was }}</p>
-                  <p class="pack-option-price" style="{% if block.settings.is_selected %}color: white;{% else %}color: var(--color-primary);{% endif %}">{{ block.settings.price_now }}</p>
-                  <p class="pack-option-save" style="{% if block.settings.is_selected %}color: rgba(255,255,255,0.8);{% else %}color: var(--color-secondary);{% endif %}">{{ block.settings.save_text }}</p>
-                  {% if block.settings.is_selected %}
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin: 0.5rem auto 0;"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
-                  {% endif %}
-                </div>
-              {% endif %}
-            {% endfor %}
-          </div>
+        {% if section.settings.disclaimer != blank %}
+          <p class="pack-disclaimer">{{ section.settings.disclaimer }}</p>
+        {% endif %}
 
-          {%- comment -%} Summary Box {%- endcomment -%}
-          <div class="pack-summary">
-            <p class="pack-summary-label">{{ section.settings.summary_label }}</p>
-            <p class="pack-summary-selection" id="pack-selection-name">{{ section.settings.default_selection }}</p>
-            <div class="pack-summary-price">
-              <span class="pack-summary-was" id="pack-price-was">{{ section.settings.default_price_was }}</span>
-              <span class="pack-summary-now" id="pack-price-now">{{ section.settings.default_price_now }}</span>
-            </div>
-            <div class="pack-summary-discount">
-              <span>{{ section.settings.discount_text }}</span>
-            </div>
-          </div>
-
-          {%- comment -%} Buttons {%- endcomment -%}
-          <div class="pack-buttons">
-            <a href="{{ section.settings.primary_button_url }}" id="pack-primary-btn"
-               {% if section.settings.primary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
-               class="btn btn-primary btn-lg btn-full">
-              {{ section.settings.primary_button_text }}
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-
-            {% if section.settings.secondary_button_text != blank %}
-              <a href="{{ section.settings.secondary_button_url }}"
-                 {% if section.settings.secondary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
-                 class="btn btn-amazon btn-lg btn-full">
-                {{ section.settings.secondary_button_text }}
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-              </a>
-            {% endif %}
-          </div>
-
-          {% if section.settings.disclaimer != blank %}
-            <p class="pack-disclaimer">{{ section.settings.disclaimer }}</p>
-          {% endif %}
-
-          {%- comment -%} Trust Badges {%- endcomment -%}
-          <div class="pack-trust-badges">
-            <span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
-              {{ section.settings.trust_badge_1 }}
-            </span>
-            <span>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
-              {{ section.settings.trust_badge_2 }}
-            </span>
-          </div>
+        {%- comment -%} Trust Badges {%- endcomment -%}
+        <div class="pack-trust">
+          <span class="pack-trust-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
+            {{ section.settings.trust_badge_1 }}
+          </span>
+          <span class="pack-trust-item">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"/></svg>
+            {{ section.settings.trust_badge_2 }}
+          </span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
+<style>
+  .pack-section {
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .pack-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  .pack-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .pack-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .pack-title {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: #3B82F6;
+    margin-bottom: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .pack-title {
+      font-size: 2.25rem;
+    }
+  }
+
+  .pack-subtitle {
+    font-size: 0.938rem;
+    color: #64748B;
+  }
+
+  .pack-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  @media (min-width: 768px) {
+    .pack-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+  }
+
+  /* Image Column */
+  .pack-image-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .pack-product-img {
+    max-width: 280px;
+    height: auto;
+  }
+
+  @media (min-width: 768px) {
+    .pack-product-img {
+      max-width: 350px;
+    }
+  }
+
+  .pack-image-placeholder {
+    width: 280px;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #F1F5F9;
+    border-radius: 1rem;
+    color: #94A3B8;
+    font-size: 0.75rem;
+  }
+
+  .pack-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #FEF3C7;
+    border-radius: 9999px;
+  }
+
+  .pack-rating-stars {
+    color: #F59E0B;
+    font-size: 0.875rem;
+  }
+
+  .pack-rating-value {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0F172A;
+  }
+
+  .pack-rating-count {
+    font-size: 0.75rem;
+    color: #64748B;
+  }
+
+  /* Pack Options */
+  .pack-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .pack-options {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .pack-option {
+    position: relative;
+    padding: 1rem 0.75rem;
+    background: #FFFFFF;
+    border: 2px solid #E2E8F0;
+    border-radius: 0.75rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .pack-option:hover {
+    border-color: #3B82F6;
+  }
+
+  .pack-option--selected {
+    background: #3B82F6;
+    border-color: #3B82F6;
+  }
+
+  .pack-option--selected .pack-option-name,
+  .pack-option--selected .pack-option-price,
+  .pack-option--selected .pack-option-save {
+    color: #FFFFFF;
+  }
+
+  .pack-option--selected .pack-option-was {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .pack-badge {
+    position: absolute;
+    top: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.125rem 0.5rem;
+    background: #3B82F6;
+    color: #FFFFFF;
+    font-size: 0.563rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .pack-badge--best {
+    background: #EF4444;
+  }
+
+  .pack-option-name {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 0.25rem;
+  }
+
+  .pack-option-was {
+    font-size: 0.75rem;
+    color: #94A3B8;
+    text-decoration: line-through;
+  }
+
+  .pack-option-price {
+    font-size: 1.125rem;
+    font-weight: 900;
+    color: #3B82F6;
+  }
+
+  .pack-option-save {
+    font-size: 0.688rem;
+    color: #22C55E;
+    font-weight: 600;
+  }
+
+  /* Summary */
+  .pack-summary {
+    padding: 1rem;
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .pack-summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .pack-summary-label {
+    font-size: 0.75rem;
+    color: #64748B;
+    text-transform: uppercase;
+  }
+
+  .pack-summary-name {
+    font-size: 0.938rem;
+    font-weight: 700;
+    color: #0F172A;
+  }
+
+  .pack-summary-was {
+    font-size: 0.875rem;
+    color: #94A3B8;
+    text-decoration: line-through;
+  }
+
+  .pack-summary-now {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #3B82F6;
+  }
+
+  .pack-discount-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: #EF4444;
+    color: #FFFFFF;
+    font-size: 0.688rem;
+    font-weight: 700;
+    border-radius: 0.25rem;
+    text-transform: uppercase;
+  }
+
+  /* Buttons */
+  .pack-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .pack-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    font-size: 0.938rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+
+  .pack-btn svg {
+    transition: transform 0.2s ease;
+  }
+
+  .pack-btn:hover svg {
+    transform: translateX(4px);
+  }
+
+  .pack-btn-primary {
+    background: #3B82F6;
+    color: #FFFFFF;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  }
+
+  .pack-btn-primary:hover {
+    background: #2563EB;
+  }
+
+  .pack-btn-amazon {
+    background: #FF9900;
+    color: #000000;
+  }
+
+  .pack-btn-amazon:hover {
+    background: #e88a00;
+  }
+
+  .pack-disclaimer {
+    font-size: 0.75rem;
+    color: #94A3B8;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  /* Trust Badges */
+  .pack-trust {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .pack-trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.75rem;
+    color: #22C55E;
+  }
+</style>
+
 <script>
   function selectPack(element) {
-    // Remove selection from all options
     document.querySelectorAll('.pack-option').forEach(function(opt) {
       opt.classList.remove('pack-option--selected');
-      opt.classList.add('pack-option--default');
-      const price = opt.querySelector('.pack-option-price');
-      const save = opt.querySelector('.pack-option-save');
-      if (price) price.style.color = 'var(--color-primary)';
-      if (save) save.style.color = 'var(--color-secondary)';
-      // Remove checkmark
-      const checkmark = opt.querySelector('svg');
-      if (checkmark) checkmark.style.display = 'none';
     });
-
-    // Add selection to clicked option
-    element.classList.remove('pack-option--default');
     element.classList.add('pack-option--selected');
-    const price = element.querySelector('.pack-option-price');
-    const save = element.querySelector('.pack-option-save');
-    if (price) price.style.color = 'white';
-    if (save) save.style.color = 'rgba(255,255,255,0.8)';
 
-    // Update summary
     const name = element.dataset.packName;
     const was = element.dataset.packWas;
     const now = element.dataset.packNow;
@@ -193,12 +480,6 @@
       "default": "Choose Your Pack"
     },
     {
-      "type": "color",
-      "id": "title_color",
-      "label": "Title Color",
-      "default": "#3B82F6"
-    },
-    {
       "type": "text",
       "id": "subtitle",
       "label": "Section Subtitle",
@@ -212,7 +493,7 @@
       "type": "image_picker",
       "id": "product_image",
       "label": "Product Image",
-      "info": "Recommended: 600x600px transparent PNG"
+      "info": "Recommended: 600x600px"
     },
     {
       "type": "checkbox",
@@ -231,24 +512,6 @@
       "id": "review_count",
       "label": "Review Count",
       "default": "49,847+ reviews"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_usa_badge",
-      "label": "Show USA Badge",
-      "default": true
-    },
-    {
-      "type": "text",
-      "id": "usa_badge_title",
-      "label": "USA Badge Title",
-      "default": "Made in USA"
-    },
-    {
-      "type": "text",
-      "id": "usa_badge_subtitle",
-      "label": "USA Badge Subtitle",
-      "default": "Premium Quality"
     },
     {
       "type": "header",
@@ -334,7 +597,7 @@
       "type": "text",
       "id": "disclaimer",
       "label": "Disclaimer Text",
-      "default": "*Discount applied automatically at checkout – no code needed"
+      "default": "*Discount applied automatically at checkout"
     },
     {
       "type": "text",
@@ -357,26 +620,6 @@
       "id": "background_color",
       "label": "Background Color",
       "default": "#FFFFFF"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 30,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Padding Top",
-      "default": 50
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 30,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Padding Bottom",
-      "default": 80
     }
   ],
   "blocks": [
@@ -433,8 +676,7 @@
         {
           "type": "url",
           "id": "button_url",
-          "label": "Custom Buy URL",
-          "info": "Optional: overrides main button URL when this pack is selected"
+          "label": "Custom Buy URL"
         }
       ]
     }
@@ -450,8 +692,7 @@
             "name": "Single",
             "price_was": "$18.99",
             "price_now": "$14.24",
-            "save_text": "Save $4.75",
-            "is_selected": false
+            "save_text": "Save $4.75"
           }
         },
         {
@@ -472,8 +713,7 @@
             "name": "3 Pack",
             "price_was": "$39.99",
             "price_now": "$29.99",
-            "save_text": "Save $10.00",
-            "is_selected": false
+            "save_text": "Save $10.00"
           }
         },
         {
@@ -484,8 +724,7 @@
             "price_now": "$48.71",
             "save_text": "Save $16.24",
             "badge": "BEST VALUE",
-            "badge_style": "best_value",
-            "is_selected": false
+            "badge_style": "best_value"
           }
         }
       ]

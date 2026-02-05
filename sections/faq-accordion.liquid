@@ -1,16 +1,16 @@
-<section class="faq-section section-bg-pattern" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
-  <div class="container">
+<section class="faq-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
+  <div class="faq-container">
     <div class="faq-content">
       {%- comment -%} Header {%- endcomment -%}
       <div class="faq-header">
         {% if section.settings.show_badge %}
-          <div class="badge badge-primary" style="margin-bottom: 1rem;">
+          <div class="faq-badge">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>
             <span>{{ section.settings.badge_text }}</span>
           </div>
         {% endif %}
 
-        <h2 class="faq-title font-black">{{ section.settings.title }}</h2>
+        <h2 class="faq-title">{{ section.settings.title }}</h2>
 
         {% if section.settings.subtitle != blank %}
           <p class="faq-subtitle">{{ section.settings.subtitle }}</p>
@@ -46,7 +46,7 @@
           {% if section.settings.contact_button_text != blank %}
             <a href="{{ section.settings.contact_button_url }}"
                {% if section.settings.contact_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
-               class="btn btn-secondary">
+               class="faq-contact-btn">
               {{ section.settings.contact_button_text }}
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
             </a>
@@ -62,6 +62,18 @@
     position: relative;
   }
 
+  .faq-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .faq-container {
+      padding: 0 1.5rem;
+    }
+  }
+
   .faq-content {
     max-width: 800px;
     margin: 0 auto;
@@ -72,18 +84,45 @@
     margin-bottom: 2.5rem;
   }
 
+  .faq-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.375rem 0.875rem;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.15));
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 2rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #3B82F6;
+    margin-bottom: 1rem;
+  }
+
   .faq-title {
     font-size: 1.75rem;
+    font-weight: 900;
     line-height: 1.2;
     margin-bottom: 0.75rem;
-    color: var(--color-foreground);
+    color: #0F172A;
+  }
+
+  @media (min-width: 768px) {
+    .faq-title {
+      font-size: 2.25rem;
+    }
   }
 
   .faq-subtitle {
     font-size: 1rem;
-    color: var(--color-muted);
+    color: #64748B;
     max-width: 600px;
     margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .faq-subtitle {
+      font-size: 1.125rem;
+    }
   }
 
   .faq-list {
@@ -93,20 +132,20 @@
   }
 
   .faq-item {
-    background: white;
-    border-radius: 12px;
-    border: 1px solid var(--color-border);
+    background: #FFFFFF;
+    border-radius: 0.75rem;
+    border: 1px solid #E2E8F0;
     overflow: hidden;
     transition: box-shadow 0.2s ease, border-color 0.2s ease;
   }
 
   .faq-item:hover {
-    border-color: var(--color-primary);
+    border-color: #3B82F6;
     box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
   }
 
   .faq-item.active {
-    border-color: var(--color-primary);
+    border-color: #3B82F6;
     box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
   }
 
@@ -123,12 +162,19 @@
     text-align: left;
     font-size: 1rem;
     font-weight: 600;
-    color: var(--color-foreground);
+    color: #0F172A;
     transition: color 0.2s ease;
   }
 
   .faq-question:hover {
-    color: var(--color-primary);
+    color: #3B82F6;
+  }
+
+  @media (min-width: 768px) {
+    .faq-question {
+      padding: 1.5rem;
+      font-size: 1.063rem;
+    }
   }
 
   .faq-question-text {
@@ -142,7 +188,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--color-primary);
+    color: #3B82F6;
   }
 
   .faq-icon-minus {
@@ -171,7 +217,14 @@
     padding: 0 1.25rem 1.25rem;
     font-size: 0.938rem;
     line-height: 1.7;
-    color: var(--color-muted);
+    color: #64748B;
+  }
+
+  @media (min-width: 768px) {
+    .faq-answer-content {
+      padding: 0 1.5rem 1.5rem;
+      font-size: 1rem;
+    }
   }
 
   .faq-contact {
@@ -179,34 +232,36 @@
     text-align: center;
     padding: 2rem;
     background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.1));
-    border-radius: 16px;
+    border-radius: 1rem;
     border: 1px solid rgba(59, 130, 246, 0.1);
   }
 
   .faq-contact-text {
     font-size: 1rem;
-    color: var(--color-foreground);
+    color: #0F172A;
     margin-bottom: 1rem;
   }
 
-  @media (min-width: 768px) {
-    .faq-title {
-      font-size: 2.25rem;
-    }
+  .faq-contact-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background: #FFFFFF;
+    color: #3B82F6;
+    font-size: 0.938rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 2px solid #3B82F6;
+    border-radius: 0.75rem;
+    transition: all 0.2s ease;
+  }
 
-    .faq-subtitle {
-      font-size: 1.125rem;
-    }
-
-    .faq-question {
-      padding: 1.5rem;
-      font-size: 1.063rem;
-    }
-
-    .faq-answer-content {
-      padding: 0 1.5rem 1.5rem;
-      font-size: 1rem;
-    }
+  .faq-contact-btn:hover {
+    background: #3B82F6;
+    color: #FFFFFF;
+    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
   }
 </style>
 
