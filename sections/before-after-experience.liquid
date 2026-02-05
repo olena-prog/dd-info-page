@@ -1,4 +1,5 @@
 {{ 'component-sections.css' | asset_url | stylesheet_tag }}
+{{ 'section-before-after.js' | asset_url | script_tag }}
 
 <section class="experience-section section-bg-pattern" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
   <div class="container">
@@ -129,20 +130,6 @@
     </div>
   </div>
 </section>
-
-<script>
-  function playExperienceVideo() {
-    const video = document.getElementById('experience-video');
-    const overlay = document.getElementById('video-overlay');
-
-    if (video && overlay) {
-      video.controls = true;
-      video.muted = false;
-      video.play();
-      overlay.style.display = 'none';
-    }
-  }
-</script>
 
 {% schema %}
 {
