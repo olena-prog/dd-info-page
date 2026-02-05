@@ -1,104 +1,407 @@
-{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+{{ 'base.css' | asset_url | stylesheet_tag }}
 
-<section class="how-it-works-section section-bg-pattern" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
-  <div class="container">
-    <div class="hiw-content">
-      {%- comment -%} Header {%- endcomment -%}
-      <div class="hiw-header">
-        <h2 class="hiw-title font-black">{{ section.settings.title }}</h2>
-        {% if section.settings.subtitle != blank %}
-          <div class="hiw-subtitle">
-            <p>{{ section.settings.subtitle }}</p>
-          </div>
-        {% endif %}
-      </div>
-
-      {%- comment -%} Main Feature Card with Image {%- endcomment -%}
-      <div class="hiw-main-card">
-        <div class="hiw-main-card-content">
-          {%- comment -%} Image Container {%- endcomment -%}
-          <div class="hiw-image-container">
-            {% if section.settings.feature_image != blank %}
-              <img
-                src="{{ section.settings.feature_image | image_url: width: 400 }}"
-                srcset="{{ section.settings.feature_image | image_url: width: 200 }} 200w,
-                        {{ section.settings.feature_image | image_url: width: 300 }} 300w,
-                        {{ section.settings.feature_image | image_url: width: 400 }} 400w"
-                sizes="(max-width: 768px) 200px, 300px"
-                width="{{ section.settings.feature_image.width }}"
-                height="{{ section.settings.feature_image.height }}"
-                alt="{{ section.settings.feature_image.alt | default: section.settings.feature_title }}"
-                loading="lazy"
-              >
-            {% else %}
-              <div class="image-upload-placeholder" style="min-height: 200px; background-color: #f8fafc; border-radius: 12px;">
-                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: #94a3b8;"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-                <p style="color: #94a3b8; font-size: 12px; margin-top: 8px;">Upload Feature Image</p>
-              </div>
-            {% endif %}
-          </div>
-
-          {%- comment -%} Text Content {%- endcomment -%}
-          <div class="hiw-main-text">
-            {% if section.settings.feature_badge != blank %}
-              <div class="badge badge-primary" style="margin-bottom: 0.75rem;">
-                <span style="width: 6px; height: 6px; background: var(--color-primary); border-radius: 50%; animation: pulse 2s infinite;"></span>
-                <span>{{ section.settings.feature_badge }}</span>
-              </div>
-            {% endif %}
-            <h3 class="font-black">{{ section.settings.feature_title }}</h3>
-            <h4>{{ section.settings.feature_subtitle }}</h4>
-            <p>{{ section.settings.feature_description }}</p>
-          </div>
-        </div>
-      </div>
-
-      {%- comment -%} Steps {%- endcomment -%}
-      <div class="hiw-steps">
-        {% for block in section.blocks %}
-          {% if block.type == 'step' %}
-            <div class="hiw-step" {{ block.shopify_attributes }}>
-              <div class="hiw-step-content">
-                <div class="hiw-step-number">{{ forloop.index }}</div>
-                <div class="hiw-step-text">
-                  <h5>{{ block.settings.title }}</h5>
-                  <p>{{ block.settings.description }}</p>
-                </div>
-              </div>
-            </div>
-          {% endif %}
-        {% endfor %}
-      </div>
-
-      {%- comment -%} Buttons {%- endcomment -%}
-      <div class="flex flex-col gap-3 justify-center items-center" style="margin-bottom: 0.75rem;">
-        <div class="flex flex-col gap-3" style="width: 100%; max-width: 500px;">
-          {% if section.settings.primary_button_text != blank %}
-            <a href="{{ section.settings.primary_button_url }}"
-               {% if section.settings.primary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
-               class="btn btn-primary btn-lg btn-full">
-              {{ section.settings.primary_button_text }}
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          {% endif %}
-
-          {% if section.settings.secondary_button_text != blank %}
-            <a href="{{ section.settings.secondary_button_url }}"
-               {% if section.settings.secondary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
-               class="btn btn-amazon btn-lg btn-full">
-              {{ section.settings.secondary_button_text }}
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-            </a>
-          {% endif %}
-        </div>
-      </div>
-
-      {% if section.settings.disclaimer != blank %}
-        <p class="text-muted text-xs text-center">{{ section.settings.disclaimer }}</p>
+<section class="hiw-section" style="background-color: {{ section.settings.background_color }};">
+  <div class="hiw-container">
+    {%- comment -%} Header {%- endcomment -%}
+    <div class="hiw-header">
+      <h2 class="hiw-title">{{ section.settings.title }}</h2>
+      {% if section.settings.subtitle != blank %}
+        <p class="hiw-subtitle">{{ section.settings.subtitle }}</p>
       {% endif %}
     </div>
+
+    {%- comment -%} Main Feature Card {%- endcomment -%}
+    <div class="hiw-main-card">
+      <div class="hiw-main-inner">
+        {%- comment -%} Image {%- endcomment -%}
+        <div class="hiw-image-wrapper">
+          {% if section.settings.feature_image != blank %}
+            <img
+              src="{{ section.settings.feature_image | image_url: width: 400 }}"
+              srcset="{{ section.settings.feature_image | image_url: width: 200 }} 200w,
+                      {{ section.settings.feature_image | image_url: width: 300 }} 300w,
+                      {{ section.settings.feature_image | image_url: width: 400 }} 400w"
+              sizes="(max-width: 768px) 150px, 200px"
+              width="{{ section.settings.feature_image.width }}"
+              height="{{ section.settings.feature_image.height }}"
+              alt="{{ section.settings.feature_image.alt | default: section.settings.feature_title }}"
+              loading="lazy"
+              class="hiw-feature-img"
+            >
+          {% else %}
+            <div class="hiw-image-placeholder">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+              <span>Upload Feature Image</span>
+            </div>
+          {% endif %}
+        </div>
+
+        {%- comment -%} Text Content {%- endcomment -%}
+        <div class="hiw-main-text">
+          {% if section.settings.feature_badge != blank %}
+            <div class="hiw-badge">
+              <span class="hiw-badge-dot"></span>
+              <span>{{ section.settings.feature_badge }}</span>
+            </div>
+          {% endif %}
+          <h3 class="hiw-feature-title">{{ section.settings.feature_title }}</h3>
+          <h4 class="hiw-feature-subtitle">{{ section.settings.feature_subtitle }}</h4>
+          <p class="hiw-feature-desc">{{ section.settings.feature_description }}</p>
+        </div>
+      </div>
+    </div>
+
+    {%- comment -%} Steps Grid {%- endcomment -%}
+    <div class="hiw-steps">
+      {% for block in section.blocks %}
+        {% if block.type == 'step' %}
+          <div class="hiw-step" {{ block.shopify_attributes }}>
+            <div class="hiw-step-number">{{ forloop.index }}</div>
+            <div class="hiw-step-content">
+              <h5 class="hiw-step-title">{{ block.settings.title }}</h5>
+              <p class="hiw-step-desc">{{ block.settings.description }}</p>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {%- comment -%} Buttons {%- endcomment -%}
+    <div class="hiw-buttons">
+      {% if section.settings.primary_button_text != blank %}
+        <a href="{{ section.settings.primary_button_url }}"
+           {% if section.settings.primary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+           class="hiw-btn hiw-btn-primary">
+          {{ section.settings.primary_button_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      {% endif %}
+
+      {% if section.settings.secondary_button_text != blank %}
+        <a href="{{ section.settings.secondary_button_url }}"
+           {% if section.settings.secondary_button_new_tab %}target="_blank" rel="noopener noreferrer"{% endif %}
+           class="hiw-btn hiw-btn-amazon">
+          {{ section.settings.secondary_button_text }}
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      {% endif %}
+    </div>
+
+    {% if section.settings.disclaimer != blank %}
+      <p class="hiw-disclaimer">{{ section.settings.disclaimer }}</p>
+    {% endif %}
   </div>
 </section>
+
+<style>
+  .hiw-section {
+    padding: 3rem 1rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  .hiw-container {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* Header */
+  .hiw-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .hiw-title {
+    font-size: 1.75rem;
+    font-weight: 900;
+    color: #0F172A;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-title {
+      font-size: 2.25rem;
+    }
+  }
+
+  .hiw-subtitle {
+    font-size: 0.938rem;
+    color: #64748B;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-subtitle {
+      font-size: 1rem;
+    }
+  }
+
+  /* Main Card */
+  .hiw-main-card {
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(59, 130, 246, 0.1));
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-main-card {
+      padding: 2rem;
+    }
+  }
+
+  .hiw-main-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: center;
+  }
+
+  @media (min-width: 640px) {
+    .hiw-main-inner {
+      flex-direction: row;
+      text-align: left;
+    }
+  }
+
+  .hiw-image-wrapper {
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: 640px) {
+    .hiw-image-wrapper {
+      width: 180px;
+      height: 180px;
+    }
+  }
+
+  .hiw-feature-img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .hiw-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 0.75rem;
+    color: #64748B;
+    font-size: 0.75rem;
+  }
+
+  .hiw-main-text {
+    flex: 1;
+  }
+
+  .hiw-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #3B82F6;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+  }
+
+  .hiw-badge-dot {
+    width: 6px;
+    height: 6px;
+    background: #3B82F6;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .hiw-feature-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #0F172A;
+    margin-bottom: 0.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-feature-title {
+      font-size: 1.75rem;
+    }
+  }
+
+  .hiw-feature-subtitle {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #3B82F6;
+    margin-bottom: 0.75rem;
+  }
+
+  .hiw-feature-desc {
+    font-size: 0.875rem;
+    color: #64748B;
+    line-height: 1.6;
+  }
+
+  /* Steps */
+  .hiw-steps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .hiw-steps {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .hiw-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #FFFFFF;
+    border: 1px solid #E2E8F0;
+    border-radius: 0.75rem;
+    transition: all 0.3s ease;
+  }
+
+  .hiw-step:hover {
+    border-color: #3B82F6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+  }
+
+  .hiw-step-number {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #3B82F6;
+    color: #FFFFFF;
+    font-size: 0.875rem;
+    font-weight: 700;
+    border-radius: 50%;
+  }
+
+  .hiw-step-content {
+    flex: 1;
+  }
+
+  .hiw-step-title {
+    font-size: 0.938rem;
+    font-weight: 700;
+    color: #0F172A;
+    margin-bottom: 0.25rem;
+  }
+
+  .hiw-step-desc {
+    font-size: 0.813rem;
+    color: #64748B;
+    line-height: 1.5;
+  }
+
+  /* Buttons */
+  .hiw-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 500px;
+    margin: 0 auto 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .hiw-buttons {
+      flex-direction: row;
+      justify-content: center;
+    }
+  }
+
+  .hiw-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    font-size: 0.938rem;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+
+  @media (min-width: 640px) {
+    .hiw-btn {
+      width: auto;
+    }
+  }
+
+  .hiw-btn svg {
+    transition: transform 0.2s ease;
+  }
+
+  .hiw-btn:hover svg {
+    transform: translateX(4px);
+  }
+
+  .hiw-btn-primary {
+    background: #3B82F6;
+    color: #FFFFFF;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  }
+
+  .hiw-btn-primary:hover {
+    background: #2563EB;
+    transform: scale(1.02);
+  }
+
+  .hiw-btn-amazon {
+    background: #FF9900;
+    color: #000000;
+  }
+
+  .hiw-btn-amazon:hover {
+    background: #e88a00;
+    transform: scale(1.02);
+  }
+
+  .hiw-disclaimer {
+    font-size: 0.75rem;
+    color: #94A3B8;
+    text-align: center;
+  }
+</style>
 
 {% schema %}
 {
@@ -120,7 +423,7 @@
       "type": "textarea",
       "id": "subtitle",
       "label": "Section Subtitle",
-      "default": "Apply <span class=\"text-primary font-semibold\">3–10 sprays</span> to the head and shaft, let it absorb for a few minutes, then enjoy longer-lasting control."
+      "default": "Apply 3–10 sprays to the head and shaft, let it absorb for a few minutes, then enjoy longer-lasting control."
     },
     {
       "type": "header",
@@ -130,7 +433,7 @@
       "type": "image_picker",
       "id": "feature_image",
       "label": "Feature Image",
-      "info": "Recommended: 400x400px (illustration or product image)"
+      "info": "Recommended: 400x400px"
     },
     {
       "type": "text",
@@ -206,7 +509,7 @@
       "type": "text",
       "id": "disclaimer",
       "label": "Disclaimer Text",
-      "default": "*Discount applied automatically at checkout – no code needed"
+      "default": "*Discount applied automatically at checkout"
     },
     {
       "type": "header",
@@ -217,26 +520,6 @@
       "id": "background_color",
       "label": "Background Color",
       "default": "#FFFFFF"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 30,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Padding Top",
-      "default": 50
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 30,
-      "max": 100,
-      "step": 5,
-      "unit": "px",
-      "label": "Padding Bottom",
-      "default": 80
     }
   ],
   "blocks": [

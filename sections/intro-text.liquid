@@ -1,41 +1,133 @@
-{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+{{ 'base.css' | asset_url | stylesheet_tag }}
 
-<section class="intro-section" style="padding-top: {{ section.settings.padding_top }}px; padding-bottom: {{ section.settings.padding_bottom }}px; background-color: {{ section.settings.background_color }};">
+<section class="intro-section" style="background-color: {{ section.settings.background_color }};">
+  {%- comment -%} Left Accent Line {%- endcomment -%}
   {% if section.settings.show_left_accent %}
-    <div class="intro-left-accent" style="position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 0.25rem; height: 8rem; background: linear-gradient(to bottom, transparent, {{ section.settings.accent_color | default: 'rgba(59, 130, 246, 0.3)' }}, transparent);"></div>
+    <div class="intro-accent-left"></div>
   {% endif %}
 
-  <div class="container">
-    <div class="intro-content" style="max-width: {{ section.settings.content_width }}px;">
-      <div class="relative">
-        {% if section.settings.show_top_divider %}
-          <div class="intro-divider"></div>
-        {% endif %}
+  <div class="intro-container">
+    <div class="intro-content">
+      {%- comment -%} Top Divider {%- endcomment -%}
+      {% if section.settings.show_top_divider %}
+        <div class="intro-divider"></div>
+      {% endif %}
 
-        <h2 class="intro-title font-black" style="margin-bottom: {{ section.settings.title_spacing }}px;">
-          <span style="display: block; color: {{ section.settings.title_line_1_color }}; font-size: {{ section.settings.title_line_1_size_mobile }}px;">{{ section.settings.title_line_1 }}</span>
-          <span style="display: block; color: {{ section.settings.title_line_2_color }};">{{ section.settings.title_line_2 }}</span>
-        </h2>
+      {%- comment -%} Title {%- endcomment -%}
+      <h2 class="intro-title">
+        <span class="intro-title-line1">{{ section.settings.title_line_1 }}</span>
+        <span class="intro-title-line2">{{ section.settings.title_line_2 }}</span>
+      </h2>
 
-        {% if section.settings.description != blank %}
-          <p class="intro-description" style="color: {{ section.settings.description_color }}; font-size: {{ section.settings.description_size }}px;">
-            {{ section.settings.description }}
-          </p>
-        {% endif %}
-      </div>
+      {%- comment -%} Description {%- endcomment -%}
+      {% if section.settings.description != blank %}
+        <p class="intro-description">{{ section.settings.description }}</p>
+      {% endif %}
     </div>
   </div>
 
+  {%- comment -%} Bottom Gradient {%- endcomment -%}
   {% if section.settings.show_bottom_gradient %}
-    <div class="intro-gradient"></div>
+    <div class="intro-gradient-bottom"></div>
   {% endif %}
 </section>
 
 <style>
+  .intro-section {
+    position: relative;
+    padding: {{ section.settings.padding_top }}px 1rem {{ section.settings.padding_bottom }}px;
+    overflow: hidden;
+  }
+
   @media (min-width: 768px) {
-    .intro-title span:first-child {
-      font-size: {{ section.settings.title_line_1_size_desktop }}px !important;
+    .intro-section {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
     }
+  }
+
+  .intro-accent-left {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0.25rem;
+    height: 8rem;
+    background: linear-gradient(to bottom, transparent, {{ section.settings.accent_color }}, transparent);
+    opacity: 0.3;
+  }
+
+  .intro-container {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .intro-content {
+    max-width: {{ section.settings.content_width }}px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .intro-divider {
+    width: 4rem;
+    height: 0.25rem;
+    background: linear-gradient(to right, #3B82F6, #60A5FA);
+    border-radius: 9999px;
+    margin: 0 auto 1.5rem;
+  }
+
+  .intro-title {
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .intro-title-line1 {
+    display: block;
+    font-size: {{ section.settings.title_line_1_size_mobile }}px;
+    font-weight: 900;
+    color: {{ section.settings.title_line_1_color }};
+    line-height: 1.1;
+  }
+
+  .intro-title-line2 {
+    display: block;
+    font-size: {{ section.settings.title_line_2_size_mobile }}px;
+    font-weight: 900;
+    color: {{ section.settings.title_line_2_color }};
+    line-height: 1.1;
+  }
+
+  @media (min-width: 768px) {
+    .intro-title-line1 {
+      font-size: {{ section.settings.title_line_1_size_desktop }}px;
+    }
+    .intro-title-line2 {
+      font-size: {{ section.settings.title_line_2_size_desktop }}px;
+    }
+  }
+
+  .intro-description {
+    font-size: {{ section.settings.description_size }}px;
+    line-height: 1.7;
+    color: {{ section.settings.description_color }};
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .intro-description {
+      font-size: {{ section.settings.description_size | plus: 2 }}px;
+    }
+  }
+
+  .intro-gradient-bottom {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 8rem;
+    background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.03));
+    pointer-events: none;
   }
 </style>
 
@@ -95,13 +187,23 @@
     },
     {
       "type": "range",
-      "id": "title_spacing",
-      "min": 8,
-      "max": 32,
-      "step": 4,
+      "id": "title_line_2_size_mobile",
+      "min": 20,
+      "max": 48,
+      "step": 2,
       "unit": "px",
-      "label": "Title Bottom Spacing",
-      "default": 16
+      "label": "Title Line 2 Size (Mobile)",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_line_2_size_desktop",
+      "min": 28,
+      "max": 72,
+      "step": 2,
+      "unit": "px",
+      "label": "Title Line 2 Size (Desktop)",
+      "default": 48
     },
     {
       "type": "header",

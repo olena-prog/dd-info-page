@@ -1,54 +1,172 @@
-{{ 'component-sections.css' | asset_url | stylesheet_tag }}
+{{ 'base.css' | asset_url | stylesheet_tag }}
 
-<section class="countdown-banner" aria-label="Sale countdown timer">
-  <div class="container">
-    <div class="countdown-wrapper">
-      <div class="countdown-timer" data-countdown-target="{{ section.settings.countdown_date }}">
+<section class="countdown-banner-section" style="background-color: {{ section.settings.background_color }}; border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+  <div class="countdown-banner-container">
+    <div class="countdown-banner-content">
+      {%- comment -%} Timer Section {%- endcomment -%}
+      <div class="countdown-timer-wrapper" data-countdown-target="{{ section.settings.countdown_date }}">
         <div class="countdown-unit">
-          <div class="countdown-value">
-            <span data-countdown-days>{{ section.settings.days_fallback }}</span>
+          <div class="countdown-value-box">
+            <span class="countdown-number" data-countdown-days>{{ section.settings.days_fallback }}</span>
           </div>
           <span class="countdown-label">{{ section.settings.days_label }}</span>
         </div>
-        <span class="countdown-separator">:</span>
+        <span class="countdown-colon">:</span>
         <div class="countdown-unit">
-          <div class="countdown-value">
-            <span data-countdown-hours>{{ section.settings.hours_fallback }}</span>
+          <div class="countdown-value-box">
+            <span class="countdown-number" data-countdown-hours>{{ section.settings.hours_fallback }}</span>
           </div>
           <span class="countdown-label">{{ section.settings.hours_label }}</span>
         </div>
-        <span class="countdown-separator">:</span>
+        <span class="countdown-colon">:</span>
         <div class="countdown-unit">
-          <div class="countdown-value">
-            <span data-countdown-minutes>{{ section.settings.minutes_fallback }}</span>
+          <div class="countdown-value-box">
+            <span class="countdown-number" data-countdown-minutes>{{ section.settings.minutes_fallback }}</span>
           </div>
           <span class="countdown-label">{{ section.settings.minutes_label }}</span>
         </div>
-        <span class="countdown-separator">:</span>
+        <span class="countdown-colon">:</span>
         <div class="countdown-unit">
-          <div class="countdown-value">
-            <span data-countdown-seconds>{{ section.settings.seconds_fallback }}</span>
+          <div class="countdown-value-box">
+            <span class="countdown-number" data-countdown-seconds>{{ section.settings.seconds_fallback }}</span>
           </div>
           <span class="countdown-label">{{ section.settings.seconds_label }}</span>
         </div>
       </div>
 
+      {%- comment -%} Promo Text {%- endcomment -%}
       {% if section.settings.show_promo_text %}
-        <div class="countdown-promo-text">
-          <span style="color: {{ section.settings.promo_text_color }}; font-size: {{ section.settings.promo_text_size }}px; font-weight: {{ section.settings.promo_text_weight }};">
-            {{ section.settings.promo_text }}
-          </span>
+        <div class="countdown-promo">
+          <span class="countdown-promo-text">{{ section.settings.promo_text }}</span>
         </div>
       {% endif %}
     </div>
   </div>
 </section>
 
+<style>
+  .countdown-banner-section {
+    padding: 0.5rem 0;
+  }
+
+  @media (min-width: 768px) {
+    .countdown-banner-section {
+      padding: 0.625rem 0;
+    }
+  }
+
+  .countdown-banner-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .countdown-banner-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .countdown-banner-content {
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+  }
+
+  .countdown-timer-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .countdown-timer-wrapper {
+      gap: 0.5rem;
+    }
+  }
+
+  .countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.125rem;
+  }
+
+  .countdown-value-box {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.5rem;
+    min-width: 2.25rem;
+    text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .countdown-value-box {
+      padding: 0.5rem 0.75rem;
+      min-width: 2.75rem;
+    }
+  }
+
+  .countdown-number {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: #FFFFFF;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (min-width: 768px) {
+    .countdown-number {
+      font-size: 1rem;
+    }
+  }
+
+  .countdown-label {
+    font-size: 0.625rem;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .countdown-colon {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0.125rem;
+    align-self: flex-start;
+    padding-top: 0.5rem;
+  }
+
+  .countdown-promo {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .countdown-promo-text {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #FFFFFF;
+    letter-spacing: 0.025em;
+  }
+
+  @media (min-width: 768px) {
+    .countdown-promo-text {
+      font-size: 0.875rem;
+    }
+  }
+</style>
+
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    const countdownTimers = document.querySelectorAll('[data-countdown-target]');
+    const timers = document.querySelectorAll('[data-countdown-target]');
 
-    countdownTimers.forEach(function(timer) {
+    timers.forEach(function(timer) {
       const targetDate = new Date(timer.dataset.countdownTarget).getTime();
       const daysEl = timer.querySelector('[data-countdown-days]');
       const hoursEl = timer.querySelector('[data-countdown-hours]');
@@ -82,7 +200,7 @@
 {
   "name": "Countdown Timer Banner",
   "tag": "section",
-  "class": "section-countdown",
+  "class": "section-countdown-banner",
   "settings": [
     {
       "type": "header",
@@ -97,7 +215,7 @@
     },
     {
       "type": "header",
-      "content": "Fallback Values (if JS disabled)"
+      "content": "Fallback Values"
     },
     {
       "type": "text",
@@ -153,47 +271,19 @@
     },
     {
       "type": "header",
-      "content": "Promotional Text"
+      "content": "Promo Text"
     },
     {
       "type": "checkbox",
       "id": "show_promo_text",
-      "label": "Show Promotional Text",
-      "default": false
+      "label": "Show Promo Text",
+      "default": true
     },
     {
       "type": "text",
       "id": "promo_text",
-      "label": "Promotional Text",
-      "default": "Valentine's Sale - 25% OFF"
-    },
-    {
-      "type": "color",
-      "id": "promo_text_color",
-      "label": "Promo Text Color",
-      "default": "#FFFFFF"
-    },
-    {
-      "type": "range",
-      "id": "promo_text_size",
-      "min": 10,
-      "max": 24,
-      "step": 1,
-      "unit": "px",
-      "label": "Promo Text Size",
-      "default": 14
-    },
-    {
-      "type": "select",
-      "id": "promo_text_weight",
-      "label": "Promo Text Weight",
-      "options": [
-        { "value": "400", "label": "Normal" },
-        { "value": "500", "label": "Medium" },
-        { "value": "600", "label": "Semi Bold" },
-        { "value": "700", "label": "Bold" }
-      ],
-      "default": "600"
+      "label": "Promo Text",
+      "default": "Valentine's Day Sale — 25% OFF"
     },
     {
       "type": "header",
@@ -204,26 +294,6 @@
       "id": "background_color",
       "label": "Background Color",
       "default": "#0F172A"
-    },
-    {
-      "type": "range",
-      "id": "padding_top",
-      "min": 0,
-      "max": 50,
-      "step": 5,
-      "unit": "px",
-      "label": "Padding Top",
-      "default": 10
-    },
-    {
-      "type": "range",
-      "id": "padding_bottom",
-      "min": 0,
-      "max": 50,
-      "step": 5,
-      "unit": "px",
-      "label": "Padding Bottom",
-      "default": 10
     }
   ],
   "presets": [
